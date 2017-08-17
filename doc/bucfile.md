@@ -110,7 +110,8 @@ Example:
 
 ```erlang
 
-  "/home/user" = bucfile:expand_path("~").<<"/home/user">> = bucfile:expand_path(<<"~">>).
+  "/home/user" = bucfile:expand_path("~").
+  <<"/home/user">> = bucfile:expand_path(<<"~">>).
 ```
 
 <a name="is_broken-1"></a>
@@ -216,7 +217,8 @@ Example:
 
 ```erlang
 
-  "/" = bucfile:normalize_path("/toto/tutu/../../../../../..").<<"/">> = bucfile:normalize_path(<<"/toto/tutu/../../../../../..">>).
+  "/" = bucfile:normalize_path("/toto/tutu/../../../../../..").
+  <<"/">> = bucfile:normalize_path(<<"/toto/tutu/../../../../../..">>).
   "/toto/titi" = bucfile:normalize_path("/toto/tata/../titi").
 ```
 

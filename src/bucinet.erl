@@ -20,7 +20,7 @@ to_ip(IP) when is_binary(IP) ->
   to_ip(bucs:to_list(IP));
 to_ip(IP) when is_list(IP) ->
   try
-    case [bucs:to_integer(X) || X <- string:tokens(IP, ".")] of
+    case [bucs:to_integer(X) || X <- bucstring:split(IP, ".")] of
       [A, B, C, D] when A >= 0, A =< 255,
                         B >= 0, B =< 255,
                         C >= 0, C =< 255,

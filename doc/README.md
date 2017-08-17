@@ -32,6 +32,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 <tr><td><a href="buccode.md" class="module">buccode</a></td></tr>
 <tr><td><a href="bucdate.md" class="module">bucdate</a></td></tr>
 <tr><td><a href="bucfile.md" class="module">bucfile</a></td></tr>
+<tr><td><a href="bucfloat.md" class="module">bucfloat</a></td></tr>
 <tr><td><a href="bucinet.md" class="module">bucinet</a></td></tr>
 <tr><td><a href="buclists.md" class="module">buclists</a></td></tr>
 <tr><td><a href="bucmaps.md" class="module">bucmaps</a></td></tr>

@@ -260,7 +260,14 @@ Convert the given term to binary
 Example:
 
 ```
-<<"list">> = bucs:to_binary(list).<<"list">> = bucs:to_binary("list").<<"list">> = bucs:to_binary(<<"list">>).<<"123">> = bucs:to_binary(123).<<"1.20000000000000000000e+01">> = bucs:to_binary(12.0).<<"true">> = bucs:to_binary(true).<<"false">> = bucs:to_binary(false).
+
+ <<"list">> = bucs:to_binary(list).
+ <<"list">> = bucs:to_binary("list").
+ <<"list">> = bucs:to_binary(<<"list">>).
+ <<"123">> = bucs:to_binary(123).
+ <<"1.20000000000000000000e+01">> = bucs:to_binary(12.0).
+ <<"true">> = bucs:to_binary(true).
+ <<"false">> = bucs:to_binary(false).
 ```
 
 <a name="to_float-1"></a>

@@ -1,6 +1,6 @@
 -module(bucstring).
 
--export([sub/3, gsub/3]).
+-export([sub/3, gsub/3, split/2]).
 
 %% @doc
 %% Return an new string with the first occurance of Old substitued by New
@@ -50,4 +50,15 @@ gsub(Str, Old, New, Acc) ->
       Pre = string:left(Str, Pos - 1),
       Rest = string:right(Str, length(Str) - Pos + 1 - length(Old)),
       gsub(Rest, Old, New, Acc ++ Pre ++ New)
+  end.
+
+%% @doc
+%% Split string
+%% @end
+split(String, Token) ->
+  try
+    string:split(String, Token, all)
+  catch
+    error:undef ->
+      string:tokens(String, Token)
   end.

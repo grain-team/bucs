@@ -10,7 +10,8 @@
 
 
 <table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#gsub-3">gsub/3</a></td><td>
-Return an new string with the all occurances of Old substitued by New.</td></tr><tr><td valign="top"><a href="#sub-3">sub/3</a></td><td>
+Return an new string with the all occurances of Old substitued by New.</td></tr><tr><td valign="top"><a href="#split-2">split/2</a></td><td>
+Split string.</td></tr><tr><td valign="top"><a href="#sub-3">sub/3</a></td><td>
 Return an new string with the first occurance of Old substitued by New.</td></tr></table>
 
 
@@ -35,6 +36,14 @@ Example:
 
   "HeLLo WorLd" = estring:gsub("Hello World", "l", "L").
 ```
+
+<a name="split-2"></a>
+
+### split/2 ###
+
+`split(String, Token) -> any()`
+
+Split string
 
 <a name="sub-3"></a>
 
