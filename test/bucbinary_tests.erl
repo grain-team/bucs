@@ -10,6 +10,7 @@ bucbinary_test_() ->
     , ?_test(t_trim())
     , ?_test(t_integers())
     , ?_test(t_floats())
+    , ?_test(t_hexstr())
    ]}.
 
 setup() ->
@@ -61,3 +62,7 @@ t_floats() ->
   ?assert(bucbinary:are_floats([<<"1.1">>, <<"12.3">>])),
   ?assertNot(bucbinary:are_floats([<<"A">>, <<"12.3">>])),
   ?assertNot(bucbinary:are_floats([<<"1.2">>, <<"123">>])).
+
+t_hexstr() ->
+  Bin = <<15, 83, 41, 62, 16, 164, 99, 65, 255, 153, 113, 195, 226, 161, 1, 111>>,
+  ?assertEqual(Bin, bucbinary:from_hexstr(bucbinary:to_hexstr(Bin))).

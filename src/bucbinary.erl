@@ -7,7 +7,27 @@
          , is_float/1
          , are_integers/1
          , are_floats/1
+         , to_hexstr/1
+         , from_hexstr/1
         ]).
+
+%% @doc
+%% Convert a binary to and Hex string
+%% @end
+to_hexstr(Bin) when is_binary(Bin) ->
+  lists:flatten([io_lib:format("~2.16.0B", [X]) ||
+    X <- binary_to_list(Bin)]).
+
+%% @doc
+%% Convert a Hex string to binary
+%% @end
+from_hexstr(S) when is_list(S) ->
+  hexstr_to_bin(S, []).
+hexstr_to_bin([], Acc) ->
+  list_to_binary(lists:reverse(Acc));
+hexstr_to_bin([X, Y|T], Acc) ->
+  {ok, [V], []} = io_lib:fread("~16u", [X, Y]),
+  hexstr_to_bin(T, [V | Acc]).
 
 %% @doc
 %% join a list of binaries with the given separator

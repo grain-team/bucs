@@ -9,8 +9,10 @@
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#are_floats-1">are_floats/1</a></td><td></td></tr><tr><td valign="top"><a href="#are_integers-1">are_integers/1</a></td><td></td></tr><tr><td valign="top"><a href="#is_float-1">is_float/1</a></td><td></td></tr><tr><td valign="top"><a href="#is_integer-1">is_integer/1</a></td><td></td></tr><tr><td valign="top"><a href="#join-2">join/2</a></td><td>
-join a list of binaries with the given separator.</td></tr><tr><td valign="top"><a href="#trim-2">trim/2</a></td><td></td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#are_floats-1">are_floats/1</a></td><td></td></tr><tr><td valign="top"><a href="#are_integers-1">are_integers/1</a></td><td></td></tr><tr><td valign="top"><a href="#from_hexstr-1">from_hexstr/1</a></td><td>
+Convert a Hex string to binary.</td></tr><tr><td valign="top"><a href="#is_float-1">is_float/1</a></td><td></td></tr><tr><td valign="top"><a href="#is_integer-1">is_integer/1</a></td><td></td></tr><tr><td valign="top"><a href="#join-2">join/2</a></td><td>
+join a list of binaries with the given separator.</td></tr><tr><td valign="top"><a href="#to_hexstr-1">to_hexstr/1</a></td><td>
+Convert a binary to and Hex string.</td></tr><tr><td valign="top"><a href="#trim-2">trim/2</a></td><td></td></tr></table>
 
 
 <a name="functions"></a>
@@ -34,6 +36,14 @@ are_floats(List::[binary()]) -&gt; true | false
 are_integers(List::[binary()]) -&gt; true | false
 </code></pre>
 <br />
+
+<a name="from_hexstr-1"></a>
+
+### from_hexstr/1 ###
+
+`from_hexstr(S) -> any()`
+
+Convert a Hex string to binary
 
 <a name="is_float-1"></a>
 
@@ -70,6 +80,14 @@ Example:
 
   <<"toto-tata-titi">> = bucbinary:join([<<"toto">>, <<"tata">>, <<"titi">>], <<"-">>).
 ```
+
+<a name="to_hexstr-1"></a>
+
+### to_hexstr/1 ###
+
+`to_hexstr(Bin) -> any()`
+
+Convert a binary to and Hex string
 
 <a name="trim-2"></a>
 
