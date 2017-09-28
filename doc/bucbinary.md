@@ -11,7 +11,8 @@
 
 <table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#are_floats-1">are_floats/1</a></td><td></td></tr><tr><td valign="top"><a href="#are_integers-1">are_integers/1</a></td><td></td></tr><tr><td valign="top"><a href="#from_hexstr-1">from_hexstr/1</a></td><td>
 Convert a Hex string to binary.</td></tr><tr><td valign="top"><a href="#is_float-1">is_float/1</a></td><td></td></tr><tr><td valign="top"><a href="#is_integer-1">is_integer/1</a></td><td></td></tr><tr><td valign="top"><a href="#join-2">join/2</a></td><td>
-join a list of binaries with the given separator.</td></tr><tr><td valign="top"><a href="#to_hexstr-1">to_hexstr/1</a></td><td>
+join a list of binaries with the given separator.</td></tr><tr><td valign="top"><a href="#rand_bits-1">rand_bits/1</a></td><td>
+Generate random binary.</td></tr><tr><td valign="top"><a href="#to_hexstr-1">to_hexstr/1</a></td><td>
 Convert a binary to and Hex string.</td></tr><tr><td valign="top"><a href="#trim-2">trim/2</a></td><td></td></tr></table>
 
 
@@ -80,6 +81,14 @@ Example:
 
   <<"toto-tata-titi">> = bucbinary:join([<<"toto">>, <<"tata">>, <<"titi">>], <<"-">>).
 ```
+
+<a name="rand_bits-1"></a>
+
+### rand_bits/1 ###
+
+`rand_bits(Bits) -> any()`
+
+Generate random binary
 
 <a name="to_hexstr-1"></a>
 

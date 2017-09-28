@@ -9,7 +9,16 @@
          , are_floats/1
          , to_hexstr/1
          , from_hexstr/1
+         , rand_bits/1
         ]).
+
+%% @doc
+%% Generate random binary
+%% @end
+rand_bits(Bits) ->
+  Bytes = (Bits + 7) div 8,
+  <<Result:Bits/bits, _/bits>> = crypto:strong_rand_bytes(Bytes),
+  Result.
 
 %% @doc
 %% Convert a binary to and Hex string

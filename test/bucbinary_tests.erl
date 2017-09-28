@@ -11,6 +11,7 @@ bucbinary_test_() ->
     , ?_test(t_integers())
     , ?_test(t_floats())
     , ?_test(t_hexstr())
+    , ?_test(t_rand_bits())
    ]}.
 
 setup() ->
@@ -66,3 +67,7 @@ t_floats() ->
 t_hexstr() ->
   Bin = <<15, 83, 41, 62, 16, 164, 99, 65, 255, 153, 113, 195, 226, 161, 1, 111>>,
   ?assertEqual(Bin, bucbinary:from_hexstr(bucbinary:to_hexstr(Bin))).
+
+t_rand_bits() ->
+  ?assertEqual(16, size(bucbinary:rand_bits(16 * 8))),
+  ?assertNotEqual(bucbinary:rand_bits(16), bucbinary:rand_bits(16)).
