@@ -113,12 +113,12 @@ results(_, List) -> List.
 %% Example :
 %%
 %% <pre lang="erlang">
-%% eos:in("/tmp", fun() ->
+%% bucos:in("/tmp", fun() ->
 %%   ?assertMatch({ok, "/tmp"}, file:get_cwd())
 %%   end).
 %% </pre>
 %% @end
-in(Path, Fun, Args) when is_function(Fun) ->
+in(Path, Fun, Args) when is_function(Fun, length(Args)) ->
   case file:get_cwd() of
     {ok, Dir} ->
       case file:set_cwd(Path) of
@@ -136,3 +136,4 @@ in(Path, Fun, Args) when is_function(Fun) ->
 %% @equiv in(Path, Fun, [])
 in(Path, Fun) when is_function(Fun) ->
   in(Path, Fun, []).
+

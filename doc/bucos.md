@@ -63,7 +63,7 @@ Example :
 
 ```erlang
 
-  eos:in("/tmp", fun() ->
+  bucos:in("/tmp", fun() ->
     ?assertMatch({ok, "/tmp"}, file:get_cwd())
     end).
 ```

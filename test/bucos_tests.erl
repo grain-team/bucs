@@ -17,6 +17,7 @@ bucos_test_() ->
     , ?_test(t_run_error_with_full_options())
     , ?_test(t_run_exception_bad_options())
     , ?_test(t_run_returns_output())
+    , ?_test(t_in())
    ]}.
 
 setup() ->
@@ -81,4 +82,9 @@ t_run_returns_output() ->
                bucos:run(["echo hello", "echo beautiful", "echo world"], [{return, list, [11, 13]}])),
   ?assertMatch({ok, ""},
                bucos:run(["echo hello", "echo beautiful", "echo world"], [{return, combined, [11, 13]}])).
+
+t_in() ->
+  bucos:in("/tmp", fun() ->
+                       ?assertMatch({ok, "/tmp"}, file:get_cwd())
+                   end).
 
