@@ -10,6 +10,7 @@
   , {licenses, ["BSD-3"]}
   , {links, [{"Github", "https://github.com/G-Corp/bucs"}]}
   , {files, ["src/*"
+             , "lib/*"
              , "include/*"
              , "Makefile"
              , "bu.mk"
