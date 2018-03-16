@@ -21,7 +21,7 @@
 ### from_list/1 ###
 
 <pre><code>
-from_list(List::list()) -&gt; #{}
+from_list(List::list()) -&gt; map()
 </code></pre>
 <br />
 
@@ -30,7 +30,7 @@ from_list(List::list()) -&gt; #{}
 ### from_list/2 ###
 
 <pre><code>
-from_list(List::list(), Deep::integer() | all) -&gt; #{}
+from_list(List::list(), Deep::integer() | all) -&gt; map()
 </code></pre>
 <br />
 
@@ -39,7 +39,7 @@ from_list(List::list(), Deep::integer() | all) -&gt; #{}
 ### to_list/1 ###
 
 <pre><code>
-to_list(Map::#{}) -&gt; list()
+to_list(Map::map()) -&gt; list()
 </code></pre>
 <br />
 
@@ -48,7 +48,7 @@ to_list(Map::#{}) -&gt; list()
 ### to_list/2 ###
 
 <pre><code>
-to_list(Map::#{}, Deep::integer() | all) -&gt; list()
+to_list(Map::map(), Deep::integer() | all) -&gt; list()
 </code></pre>
 <br />
 

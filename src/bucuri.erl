@@ -1,6 +1,12 @@
 -module(bucuri).
 
--export([join/2, join/1]).
+-export([
+         join/2
+         , join/1
+         , type/1
+        ]).
+
+-type uri_type() :: http | https | ftp | ssh | sftp.
 
 % @doc
 % Joins two URI paths with URI separator.
@@ -41,3 +47,9 @@ start_with_sep([[$/|_]|_]) -> true;
 start_with_sep([<<"/", _/binary>>|_]) -> true;
 start_with_sep(_) -> false.
 
+-spec type(string() | binary()) -> {ok, uri_type()} | error.
+type(URI) when is_list(URI); is_binary(URI) ->
+  case http_uri:parse(URI) of
+    {error, _} -> error;
+    {ok, {Type, _, _, _, _, _}} -> {ok, Type}
+  end.

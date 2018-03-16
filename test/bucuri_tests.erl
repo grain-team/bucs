@@ -8,6 +8,7 @@ bucuri_test_() ->
    [
     ?_test(t_join())
     , ?_test(t_join_with_uri())
+    , ?_test(t_type())
    ]}.
 
 setup() ->
@@ -30,3 +31,14 @@ t_join_with_uri() ->
   ?assertMatch("http://example.com/hello/world",
                bucuri:join(["http://example.com/", "/hello/", "/world"])).
 
+t_type() ->
+  ?assertMatch({ok, http}, bucuri:type("http://example.com")),
+  ?assertMatch({ok, https}, bucuri:type("https://example.com")),
+  ?assertMatch({ok, ftp}, bucuri:type("ftp://example.com")),
+  ?assertMatch({ok, ssh}, bucuri:type("ssh://example.com")),
+  ?assertMatch({ok, sftp}, bucuri:type("sftp://example.com")),
+  ?assertMatch({ok, http}, bucuri:type(<<"http://example.com">>)),
+  ?assertMatch({ok, https}, bucuri:type(<<"https://example.com">>)),
+  ?assertMatch({ok, ftp}, bucuri:type(<<"ftp://example.com">>)),
+  ?assertMatch({ok, ssh}, bucuri:type(<<"ssh://example.com">>)),
+  ?assertMatch({ok, sftp}, bucuri:type(<<"sftp://example.com">>)).
