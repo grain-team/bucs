@@ -28,19 +28,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 
 <table width="100%" border="0" summary="list of modules">
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucbinary.md" class="module">bucbinary</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/buccode.md" class="module">buccode</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucdate.md" class="module">bucdate</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucfile.md" class="module">bucfile</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucfloat.md" class="module">bucfloat</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucinet.md" class="module">bucinet</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/buclists.md" class="module">buclists</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucmaps.md" class="module">bucmaps</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucmime.md" class="module">bucmime</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucos.md" class="module">bucos</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucrandom.md" class="module">bucrandom</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucs.md" class="module">bucs</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucstring.md" class="module">bucstring</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/buctimer.md" class="module">buctimer</a></td></tr>
-<tr><td><a href="https://github.com/botsunit/bucs/blob/master/doc/bucuri.md" class="module">bucuri</a></td></tr></table>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucbinary.md" class="module">bucbinary</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/buccode.md" class="module">buccode</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucdate.md" class="module">bucdate</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucfile.md" class="module">bucfile</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucfloat.md" class="module">bucfloat</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucinet.md" class="module">bucinet</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/buclists.md" class="module">buclists</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucmaps.md" class="module">bucmaps</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucmime.md" class="module">bucmime</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucos.md" class="module">bucos</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucrandom.md" class="module">bucrandom</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucs.md" class="module">bucs</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucstring.md" class="module">bucstring</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/buctimer.md" class="module">buctimer</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucuri.md" class="module">bucuri</a></td></tr></table>
 
