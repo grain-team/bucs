@@ -26,6 +26,7 @@
          is_string/1,
          is_list_of_lists/1,
          is_kw_list/1,
+         is_tuple_of/2,
          compare_as_list/2,
          compare_as_string/2,
          compare_as_atom/2,
@@ -70,7 +71,32 @@ type(Data) when is_function(Data) -> function;
 type(Data) when is_boolean(Data) -> boolean;
 type(_) -> undefined.
 
-is_type(Data, Type) -> type(Data) == Type.
+is_type(Data, Type) when Type == binary;
+                         Type == list;
+                         Type == string;
+                         Type == atom;
+                         Type == float;
+                         Type == integer;
+                         Type == pid;
+                         Type == reference;
+                         Type == port;
+                         Type == tuple;
+                         Type == map;
+                         Type == function;
+                         Type == boolean ->
+  type(Data) == Type;
+is_type(Data, Type) when is_atom(Type) ->
+  is_type(Data, lists:map(fun bucs:to_atom/1, string:split(bucs:to_string(Type), "_or_", all)));
+is_type(_Data, []) ->
+  false;
+is_type(Data, [Type|Types]) ->
+  case is_type(Data, Type) of
+    true ->
+      true;
+    false ->
+      is_type(Data, Types)
+  end.
+
 
 % @doc
 % Convert the given term to atom
@@ -488,3 +514,19 @@ eval(Value, Environ) ->
       Error
   end.
 
+% @doc
+% @end
+is_tuple_of(Tuple, Pattern) when is_tuple(Tuple), is_tuple(Pattern), size(Tuple) == size(Pattern) ->
+  check_tuple_pattern(to_list(Tuple), to_list(Pattern));
+is_tuple_of(_Tuple, _Pattern) ->
+  false.
+
+check_tuple_pattern([], []) ->
+  true;
+check_tuple_pattern([Element|RestTuple], [Pattern|RestPattern]) ->
+  case is_type(Element, Pattern) of
+    true ->
+      check_tuple_pattern(RestTuple, RestPattern);
+    false ->
+      false
+  end.

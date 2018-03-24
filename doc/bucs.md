@@ -14,7 +14,7 @@ Returns the result of applying Function in Module to Args.</td></tr><tr><td vali
 Check if the given function exist.</td></tr><tr><td valign="top"><a href="#is_kw_list-1">is_kw_list/1</a></td><td>
 Check if the given value is a keyword list.</td></tr><tr><td valign="top"><a href="#is_list_of_lists-1">is_list_of_lists/1</a></td><td>
 Check if the given value is a list of lists.</td></tr><tr><td valign="top"><a href="#is_string-1">is_string/1</a></td><td>
-Check if the given value is a string.</td></tr><tr><td valign="top"><a href="#is_type-2">is_type/2</a></td><td></td></tr><tr><td valign="top"><a href="#match-2">match/2</a></td><td>
+Check if the given value is a string.</td></tr><tr><td valign="top"><a href="#is_tuple_of-2">is_tuple_of/2</a></td><td></td></tr><tr><td valign="top"><a href="#is_type-2">is_type/2</a></td><td></td></tr><tr><td valign="top"><a href="#match-2">match/2</a></td><td>
 Return true if <tt>A</tt> match <tt>B</tt>.</td></tr><tr><td valign="top"><a href="#module_exist-1">module_exist/1</a></td><td></td></tr><tr><td valign="top"><a href="#module_exists-1">module_exists/1</a></td><td>
 Check if the given module exist.</td></tr><tr><td valign="top"><a href="#pipecall-1">pipecall/1</a></td><td> 
 Pipe fun call.</td></tr><tr><td valign="top"><a href="#present-1">present/1</a></td><td></td></tr><tr><td valign="top"><a href="#to-2">to/2</a></td><td></td></tr><tr><td valign="top"><a href="#to_atom-1">to_atom/1</a></td><td> 
@@ -162,6 +162,12 @@ Check if the given value is a list of lists
 `is_string(V) -> any()`
 
 Check if the given value is a string
+
+<a name="is_tuple_of-2"></a>
+
+### is_tuple_of/2 ###
+
+`is_tuple_of(Tuple, Pattern) -> any()`
 
 <a name="is_type-2"></a>
 

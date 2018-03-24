@@ -108,6 +108,9 @@ defmodule Bucs do
   def unquote(:"eval")(arg1, arg2) do
     :erlang.apply(:"bucs", :"eval", [arg1, arg2])
   end
+  def unquote(:"is_tuple_of")(arg1, arg2) do
+    :erlang.apply(:"bucs", :"is_tuple_of", [arg1, arg2])
+  end
   def unquote(:"test")() do
     :erlang.apply(:"bucs", :"test", [])
   end

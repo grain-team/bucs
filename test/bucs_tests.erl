@@ -20,6 +20,7 @@ bucs_test_() ->
     , ?_test(t_function_doesnt_exists_cause_private())
     , ?_test(t_apply())
     , ?_test(t_is())
+    , ?_test(t_is_tuple_of())
     , ?_test(t_convert_record())
     , ?_test(t_blank())
     , ?_test(t_eval())
@@ -261,6 +262,21 @@ t_is() ->
   ?assertNot(bucs:is_string(hello)),
   ?assert(bucs:is_string("Hello World")),
   ?assertNot(bucs:is_string(["hello world"])),
+  ?assertEqual(binary, bucs:type(<<"hello">>)),
+  ?assertEqual(string, bucs:type("hello")),
+  ?assertEqual(atom, bucs:type(hello)),
+  ?assertEqual(list, bucs:type([1, 2, 3])),
+  ?assertEqual(float, bucs:type(1.2)),
+  ?assertEqual(integer, bucs:type(2)),
+  ?assert(bucs:is_type(<<"hello">>, binary)),
+  ?assert(bucs:is_type("hello", string)),
+  ?assert(bucs:is_type(hello, atom)),
+  ?assert(bucs:is_type([1, 2, 3], list)),
+  ?assert(bucs:is_type(1.2, float)),
+  ?assert(bucs:is_type(2, integer)),
+  ?assert(bucs:is_type(2, float_or_integer)),
+  ?assert(bucs:is_type("hello", string_or_list)),
+  ?assert(bucs:is_type(<<"hello">>, atom_or_integer_or_binary)),
   ?assertNot(bucs:is_kw_list("hello")),
   ?assertNot(bucs:is_kw_list([1, 2, 3])),
   ?assertNot(bucs:is_kw_list([{a, b}, {c, d}, {e, f, g}])),
@@ -268,6 +284,10 @@ t_is() ->
   ?assert(bucs:is_list_of_lists([[], [], []])),
   ?assertNot(bucs:is_list_of_lists([a, b, c])),
   ?assertNot(bucs:is_list_of_lists("hello")).
+
+t_is_tuple_of() ->
+  ?assert(bucs:is_tuple_of({1, "hello", <<"world">>}, {integer_or_float, string_or_list, binary_or_atom})),
+  ?assert(bucs:is_tuple_of({1.2, [0, 1, 2], world}, {integer_or_float, string_or_list, binary_or_atom})).
 
 t_convert_record() ->
   ?assertMatch([{bar, "baz"}, {camp, "spam"}], ?record_to_list(rec, #rec{})),
