@@ -2,12 +2,16 @@
 
 -export([type/1, exploded/1]).
 
+% @doc return the <tt>File</tt> mimetype.
+-spec type(File :: file:filename_all()) -> binary().
 type(File) ->
   case filename:extension(bucs:to_binary(File)) of
     <<>> -> <<"application/octet-stream">>;
     Ext -> mime(Ext)
   end.
 
+% @doc return the <tt>File</tt> mimetype.
+-spec exploded(File :: file:filename_all()) -> {binary(), binary()}.
 exploded(File) ->
   case binary:split(type(File), <<"/">>) of
     [Type, Subtype] -> {Type, Subtype};
@@ -566,4 +570,3 @@ mime(<<".ice">>) -> <<"x-conference/x-cooltalk">>;
 mime(<<".sisx">>) -> <<"x-epoc/x-sisx-app">>;
 mime(<<".vrm">>) -> <<"x-world/x-vrml">>;
 mime(_) -> <<"application/octet-stream">>.
-

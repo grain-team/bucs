@@ -2,19 +2,33 @@
 
 -export([from_list/1, from_list/2, to_list/1, to_list/2]).
 
+% @doc
+% Takes a list of key-value tuples elements and builds a map ; in deep.
+% @end
 -spec from_list(List :: list()) -> map().
 from_list(List) when is_list(List) ->
   from_list(List, all).
 
+% @doc
+% Takes a list of key-value tuples elements and builds a map ;
+% with the given deep.
+% @end
 -spec from_list(List :: list(), Deep :: integer() | all) -> map().
 from_list(List, Deep) when is_list(List),
                            (is_integer(Deep) orelse Deep =:= all) ->
   from_list(List, Deep, 1).
 
+% @doc
+% Returns a list of pairs representing the key-value associations of Map ; in deep
+% @end
 -spec to_list(Map :: map()) -> list().
 to_list(Map) when is_map(Map) ->
   to_list(Map, all).
 
+% @doc
+% Returns a list of pairs representing the key-value associations of Map ;
+% with the given deep.
+% @end
 -spec to_list(Map :: map(), Deep :: integer() | all) -> list().
 to_list(Map, Deep) when is_map(Map),
                         (is_integer(Deep) orelse Deep =:= all) ->
@@ -49,4 +63,3 @@ to_list(Map, Deep, Level) ->
     true ->
       List
   end.
-

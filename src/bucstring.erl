@@ -3,14 +3,14 @@
 -export([sub/3, gsub/3, split/2]).
 
 %% @doc
-%% Return an new string with the first occurance of Old substitued by New
+%% Return an new string with the first occurance of <tt>Old</tt> substitued by <tt>New</tt>
 %%
 %% Example:
 %% <pre lang="erlang">
 %% "HeLlo World" = estring:sub("Hello World", "l", "L").
 %% </pre>
 %% @end
--spec sub(string(), string(), string()) -> string().
+-spec sub(Str :: string(), Old :: string(), New :: string()) -> string().
 sub(Str, Old, New) ->
   FStr = lists:flatten(Str),
   FOld = lists:flatten(Old),
@@ -28,14 +28,14 @@ sub(Str, Old, New) ->
   end.
 
 %% @doc
-%% Return an new string with the all occurances of Old substitued by New
+%% Return an new string with the all occurances of <tt>Old</tt> substitued by <tt>New</tt>
 %%
 %% Example:
 %% <pre lang="erlang">
 %% "HeLLo WorLd" = estring:gsub("Hello World", "l", "L").
 %% </pre>
 %% @end
--spec gsub(string(), string(), string()) -> string().
+-spec gsub(Str :: string(), Old :: string(), New :: string()) -> string().
 gsub(Str, Old, New) ->
   %Acc = sub(Str,Old,New),
   %subst(Acc,Old,New,Str).
@@ -55,6 +55,7 @@ gsub(Str, Old, New, Acc) ->
 %% @doc
 %% Split string
 %% @end
+-spec split(Str :: string(), Token :: string()) -> string().
 split(String, Token) ->
   try
     string:split(String, Token, all)

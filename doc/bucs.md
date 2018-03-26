@@ -1,23 +1,41 @@
 
 
 # Module bucs #
+* [Data Types](#types)
 * [Function Index](#index)
 * [Function Details](#functions)
+
+<a name="types"></a>
+
+## Data Types ##
+
+
+
+
+### <a name="type-type">type()</a> ###
+
+
+<pre><code>
+type() = binary | list | string | atom | float | integer | pid | reference | port | tuple | map | function | boolean
+</code></pre>
 
 <a name="index"></a>
 
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#apply-2">apply/2</a></td><td></td></tr><tr><td valign="top"><a href="#apply-3">apply/3</a></td><td></td></tr><tr><td valign="top"><a href="#apply-4">apply/4</a></td><td></td></tr><tr><td valign="top"><a href="#as-2">as/2</a></td><td></td></tr><tr><td valign="top"><a href="#blank-1">blank/1</a></td><td></td></tr><tr><td valign="top"><a href="#call-3">call/3</a></td><td> 
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#apply-2">apply/2</a></td><td></td></tr><tr><td valign="top"><a href="#apply-3">apply/3</a></td><td></td></tr><tr><td valign="top"><a href="#apply-4">apply/4</a></td><td></td></tr><tr><td valign="top"><a href="#as-2">as/2</a></td><td>
+Return <tt>Data</tt> in the same type than <tt>Type</tt>.</td></tr><tr><td valign="top"><a href="#blank-1">blank/1</a></td><td></td></tr><tr><td valign="top"><a href="#call-3">call/3</a></td><td> 
 Returns the result of applying Function in Module to Args.</td></tr><tr><td valign="top"><a href="#compare_as_atom-2">compare_as_atom/2</a></td><td></td></tr><tr><td valign="top"><a href="#compare_as_binary-2">compare_as_binary/2</a></td><td></td></tr><tr><td valign="top"><a href="#compare_as_integer-2">compare_as_integer/2</a></td><td></td></tr><tr><td valign="top"><a href="#compare_as_list-2">compare_as_list/2</a></td><td></td></tr><tr><td valign="top"><a href="#compare_as_string-2">compare_as_string/2</a></td><td></td></tr><tr><td valign="top"><a href="#default_to-2">default_to/2</a></td><td></td></tr><tr><td valign="top"><a href="#eval-1">eval/1</a></td><td></td></tr><tr><td valign="top"><a href="#eval-2">eval/2</a></td><td></td></tr><tr><td valign="top"><a href="#function_exist-3">function_exist/3</a></td><td></td></tr><tr><td valign="top"><a href="#function_exists-3">function_exists/3</a></td><td>
 Check if the given function exist.</td></tr><tr><td valign="top"><a href="#is_kw_list-1">is_kw_list/1</a></td><td>
 Check if the given value is a keyword list.</td></tr><tr><td valign="top"><a href="#is_list_of_lists-1">is_list_of_lists/1</a></td><td>
 Check if the given value is a list of lists.</td></tr><tr><td valign="top"><a href="#is_string-1">is_string/1</a></td><td>
-Check if the given value is a string.</td></tr><tr><td valign="top"><a href="#is_tuple_of-2">is_tuple_of/2</a></td><td></td></tr><tr><td valign="top"><a href="#is_type-2">is_type/2</a></td><td></td></tr><tr><td valign="top"><a href="#match-2">match/2</a></td><td>
+Check if the given value is a string.</td></tr><tr><td valign="top"><a href="#is_tuple_of-2">is_tuple_of/2</a></td><td></td></tr><tr><td valign="top"><a href="#is_type-2">is_type/2</a></td><td>
+Return true if <tt>Data</tt> is of type <tt>Type</tt></td></tr><tr><td valign="top"><a href="#match-2">match/2</a></td><td>
 Return true if <tt>A</tt> match <tt>B</tt>.</td></tr><tr><td valign="top"><a href="#module_exist-1">module_exist/1</a></td><td></td></tr><tr><td valign="top"><a href="#module_exists-1">module_exists/1</a></td><td>
 Check if the given module exist.</td></tr><tr><td valign="top"><a href="#pipecall-1">pipecall/1</a></td><td> 
-Pipe fun call.</td></tr><tr><td valign="top"><a href="#present-1">present/1</a></td><td></td></tr><tr><td valign="top"><a href="#to-2">to/2</a></td><td></td></tr><tr><td valign="top"><a href="#to_atom-1">to_atom/1</a></td><td> 
+Pipe fun call.</td></tr><tr><td valign="top"><a href="#present-1">present/1</a></td><td></td></tr><tr><td valign="top"><a href="#to-2">to/2</a></td><td>
+Convert <tt>Data</tt> in type <tt>Type</tt>.</td></tr><tr><td valign="top"><a href="#to_atom-1">to_atom/1</a></td><td> 
 Convert the given term to atom.</td></tr><tr><td valign="top"><a href="#to_binary-1">to_binary/1</a></td><td> 
 Convert the given term to binary.</td></tr><tr><td valign="top"><a href="#to_float-1">to_float/1</a></td><td> 
 Convert the given term to float.</td></tr><tr><td valign="top"><a href="#to_float-2">to_float/2</a></td><td> 
@@ -25,7 +43,7 @@ Convert the given term to float, with the given precision.</td></tr><tr><td vali
 Convert the given term to integer.</td></tr><tr><td valign="top"><a href="#to_list-1">to_list/1</a></td><td> 
 Convert the given term to list.</td></tr><tr><td valign="top"><a href="#to_string-1">to_string/1</a></td><td>
 Convert the given term to string.</td></tr><tr><td valign="top"><a href="#to_term-1">to_term/1</a></td><td> 
-Convert the given value to term.</td></tr><tr><td valign="top"><a href="#type-1">type/1</a></td><td></td></tr></table>
+Convert the given value to term.</td></tr><tr><td valign="top"><a href="#type-1">type/1</a></td><td>Return the type (atom, string, float, ...) of <tt>Data</tt></td></tr></table>
 
 
 <a name="functions"></a>
@@ -54,7 +72,18 @@ Convert the given value to term.</td></tr><tr><td valign="top"><a href="#type-1"
 
 ### as/2 ###
 
-`as(Type, Data) -> any()`
+<pre><code>
+as(Type::term(), Data::term()) -&gt; term()
+</code></pre>
+<br />
+
+Return `Data` in the same type than `Type`.
+
+```
+
+ bucs:as("this is a string", <<"this is a binary">>).
+ % => "this is a binary"
+```
 
 <a name="blank-1"></a>
 
@@ -173,7 +202,12 @@ Check if the given value is a string
 
 ### is_type/2 ###
 
-`is_type(Data, Type) -> any()`
+<pre><code>
+is_type(Data::term(), Type::<a href="#type-type">type()</a>) -&gt; true | false
+</code></pre>
+<br />
+
+Return true if `Data` is of type `Type`
 
 <a name="match-2"></a>
 
@@ -234,7 +268,12 @@ Example:
 
 ### to/2 ###
 
-`to(X1, Data) -> any()`
+<pre><code>
+to(Type::<a href="#type-type">type()</a>, Data::term()) -&gt; term()
+</code></pre>
+<br />
+
+Convert `Data` in type `Type`.
 
 <a name="to_atom-1"></a>
 
@@ -385,5 +424,10 @@ Example
 
 ### type/1 ###
 
-`type(Data) -> any()`
+<pre><code>
+type(Data::term()) -&gt; <a href="#type-type">type()</a>
+</code></pre>
+<br />
+
+Return the type (atom, string, float, ...) of `Data`
 

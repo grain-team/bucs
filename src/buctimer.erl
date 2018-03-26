@@ -16,7 +16,7 @@
 % @doc
 % Verify the timer syntax.
 % @end
--spec verify(timer_spec()) -> ok | {error, term()}.
+-spec verify(Spec :: timer_spec()) -> ok | {error, term()}.
 verify({_, _, _, _, _, _} = Spec) ->
   Exp = expand(bucs:to_list(Spec)),
   Check = lists:append([[{U, N} || N <- L] ||
@@ -26,14 +26,14 @@ verify({_, _, _, _, _, _} = Spec) ->
 % @doc
 % Return the next datetime from now.
 % @end
--spec next(timer_spec()) -> {ok, calendar:datetime(), calendar:second()} | {error, term()} | stop.
+-spec next(Spec :: timer_spec()) -> {ok, calendar:datetime(), calendar:second()} | {error, term()} | stop.
 next(Spec) ->
   next(Spec, n()).
 
 % @doc
 % Return the next datetime from the given datetime.
 % @end
--spec next(timer_spec(), calendar:datetime() | datetime()) -> {ok, calendar:datetime(), calendar:second()} | {error, term()} | stop.
+-spec next(Spec :: timer_spec(), DateTime :: calendar:datetime() | datetime()) -> {ok, calendar:datetime(), calendar:second()} | {error, term()} | stop.
 next(Spec, {{Y, M, D}, {HH, MM, SS}}) ->
   next(Spec, {Y, M, D, HH, MM, SS});
 next({_, _, _, _, _, _} = Spec,
@@ -255,4 +255,3 @@ get_date(MinGap, {Date, _} = DateTime, From, Result) ->
           end
       end
   end.
-

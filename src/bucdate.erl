@@ -1,19 +1,57 @@
 %% @copyright Dale Harvey
+%% @author Dale Harvey
+%% @author Gregoire Lejeune
 %% @doc Format dates in erlang
 %%
 %% Licensed under the MIT license
 %%
-%% This module formats erlang dates in the form {{Year, Month, Day},
-%% {Hour, Minute, Second}} to printable strings, using (almost)
+%% This module formats erlang dates in the form <tt>{{Year, Month, Day},
+%% {Hour, Minute, Second}}</tt> to printable strings, using (almost)
 %% equivalent formatting rules as http://uk.php.net/date, US vs
 %% European dates are disambiguated in the same way as
-%% http://uk.php.net/manual/en/function.strtotime.php That is, Dates
-%% in the m/d/y or d-m-y formats are disambiguated by looking at the
-%% separator between the various components: if the separator is a
-%% slash (/), then the American m/d/y is assumed; whereas if the
-%% separator is a dash (-) or a dot (.), then the European d-m-y
-%% format is assumed. To avoid potential ambiguity, it's best to use
-%% ISO 8601 (YYYY-MM-DD) dates.
+%% http://uk.php.net/manual/en/function.strtotime.php
+%%
+%% <table>
+%% <tr><th>Format character</th><th>Description</th><th>Example returned values</th></tr>
+%% <tr><td><tt>Y</tt></td><td>Four digit representation of a year</td><td>2010</td></tr>
+%% <tr><td><tt>y</tt></td><td>Two digit representation of a year</td><td>10</td></tr>
+%% <tr><td><tt>L</tt></td><td>1 for leap year, 0 otherwise</td><td>0</td></tr>
+%% <tr><td><tt>o</tt></td><td>ISO-8601 week-numbering year</td><td>2010</td></tr>
+%% <tr><td><tt>n</tt></td><td>Numeric representation of a month, without leading zeros</td><td>1 - 12</td></tr>
+%% <tr><td><tt>m</tt></td><td>Numeric representation of a month, with leading zeros</td><td>01 - 12</td></tr>
+%% <tr><td><tt>M</tt></td><td>Short textual representation of a month, three letters</td><td>Jan - Dec</td></tr>
+%% <tr><td><tt>F</tt></td><td>Full textual representation of a month</td><td>January - December</td></tr>
+%% <tr><td><tt>t</tt></td><td>Number of days in the given month</td><td>28 - 31</td></tr>
+%% <tr><td><tt>W</tt></td><td>ISO-8601 week number of year, weeks starting on Monday</td><td>42</td></tr>
+%% <tr><td><tt>j</tt></td><td>Day of the month without leading zero</td><td>1 - 31</td></tr>
+%% <tr><td><tt>S</tt></td><td>English ordinal suffix for the day of the month, 2 characters</td><td>st, nd, rd, th</td></tr>
+%% <tr><td><tt>d</tt></td><td>Day of the month, 2 digits with leading zeros</td><td>01 - 31</td></tr>
+%% <tr><td><tt>D</tt></td><td>Textual representation of a day, three letters</td><td>Mon - Sun</td></tr>
+%% <tr><td><tt>l</tt></td><td>Full textual representation of the day of the week</td><td>Monday - Sunday</td></tr>
+%% <tr><td><tt>N</tt></td><td>ISO-8601 numeric representation of the day of the week</td><td>1 - 7</td></tr>
+%% <tr><td><tt>w</tt></td><td>Numeric representation of the day of the week</td><td>0 (Sunday) - 6 (Saturday)</td></tr>
+%% <tr><td><tt>z</tt></td><td>Day of the year (starting from 0)</td><td>0 - 365</td></tr>
+%% <tr><td><tt>a</tt></td><td>Lowercase Ante meridiem and Post meridiem</td><td>am, pm</td></tr>
+%% <tr><td><tt>A</tt></td><td>Uppercase Ante meridiem and Post meridiem</td><td>AM, PM</td></tr>
+%% <tr><td><tt>g</tt></td><td>12-hour format of an hour without leading zeros</td><td>1 - 12</td></tr>
+%% <tr><td><tt>G</tt></td><td>24-hour format of an hour without leading zeros</td><td>0 - 23</td></tr>
+%% <tr><td><tt>h</tt></td><td>12-hour format of an hour with leading zeros</td><td>01 - 12</td></tr>
+%% <tr><td><tt>H</tt></td><td>24-hour format of an hour with leading zeros</td><td>00 - 23</td></tr>
+%% <tr><td><tt>i</tt></td><td>Minutes with leading zeros</td><td>00 - 59</td></tr>
+%% <tr><td><tt>s</tt></td><td>Seconds, with leading zeros</td><td>00 - 59</td></tr>
+%% <tr><td><tt>f</tt></td><td>Miliseconds</td><td>321</td></tr>
+%% <tr><td><tt>c</tt></td><td>ISO 8601 date</td><td>2004-02-12T15:19:21+00:00</td></tr>
+%% <tr><td><tt>r</tt></td><td>RFC 2822 formatted date</td><td>Thu, 21 Dec 2000 16:01:07 +0200</td></tr>
+%% <tr><td><tt>U</tt></td><td>Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)</td><td>1522140838</td></tr>
+%% </table>
+%%
+%% That is, Dates in the m/d/y or d-m-y formats are disambiguated
+%% by looking at the separator between the various components:
+%% if the separator is a slash (<tt>/</tt>), then the American
+%% m/d/y is assumed; whereas if the separator is a dash (<tt>-</tt>)
+%% or a dot (<tt>.</tt>), then the European d-m-y format is assumed.
+%% To avoid potential ambiguity, it's best to use ISO 8601 (YYYY-MM-DD)
+%% dates.
 %%
 %% erlang has no concept of timezone so the following
 %% formats are not implemented: B e I O P T Z
@@ -24,15 +62,25 @@
 -author("Dale Harvey <dale@hypernumbers.com>").
 -author("Gregoire Lejeune <gregoire.lejeune@gmail.com>").
 
--export([to_iso8601/1]).
--export([add/2, add/3]).
--export([today/0, yesterday/0, tomorrow/0]).
--export([today_utc/0, yesterday_utc/0, tomorrow_utc/0]).
--export([compare/2]).
--export([format/1, format/2]).
--export([parse/1, parse/2]).
--export([nparse/1]).
--export([local_timezone/0, timezone_offset/0]).
+-export([
+         to_iso8601/1
+         , add/2
+         , add/3
+         , today/0
+         , yesterday/0
+         , tomorrow/0
+         , today_utc/0
+         , yesterday_utc/0
+         , tomorrow_utc/0
+         , compare/2
+         , format/1
+         , format/2
+         , parse/1
+         , parse/2
+         , nparse/1
+         , local_timezone/0
+         , timezone_offset/0
+        ]).
 
 %% These are used exclusively as guards and so the function like
 %% defines make sense
@@ -57,6 +105,7 @@
 %% @doc
 %% Return the local timezone
 %% @end
+-spec local_timezone() -> string().
 local_timezone() ->
   Offset = timezone_offset(),
   M = abs(Offset) rem 60,
@@ -71,6 +120,7 @@ local_timezone() ->
 %% @doc
 %% Returns the time difference between UTC time and local time, in minutes.
 %% @end
+-spec timezone_offset() -> integer().
 timezone_offset() ->
   {{_, {LH, LM, LS}}, {_, {GH, GM, GS}}} = {bucdate:today(), bucdate:today_utc()},
   if
@@ -83,7 +133,7 @@ timezone_offset() ->
 %% @doc
 %% Add <tt>N</tt> units to the given <tt>DateTime</tt>.
 %% @end
--spec add(calendar:datetime(), integer(), dt_units()) -> calendar:datetime().
+-spec add(DateTime :: calendar:datetime(), N :: integer(), Units :: dt_units()) -> calendar:datetime().
 add(DateTime, N, seconds) ->
     T1 = calendar:datetime_to_gregorian_seconds(DateTime),
     T2 = T1 + N,
@@ -115,7 +165,7 @@ add(Date, N, years) ->
 %% @doc
 %% Add 1 unit to the given <tt>DateTime</tt>.
 %% @end
--spec add(calendar:datetime(), dt_unit()) -> calendar:datetime().
+-spec add(DateTime :: calendar:datetime(), UnitOrNDays :: dt_unit() | integer()) -> calendar:datetime().
 add(Date, second) ->
     add(Date, 1, seconds);
 add(Date, minute) ->
@@ -170,9 +220,15 @@ tomorrow_utc() -> add(today_utc(), 1).
 yesterday_utc() -> add(today_utc(), -1).
 
 % @doc
-% Compate <tt>Date1</tt> and <tt>Date2</tt>
+% Compate <tt>DateTime1</tt> and <tt>DateTime2</tt>
+%
+% <ul>
+% <li>If <tt>DateTime1</tt> &gt; <tt>DateTime2</tt>, return -1 ;</li>
+% <li>If <tt>DateTime1</tt> &lt; <tt>DateTime2</tt>, return 1 ;</li>
+% <li>otherwise, return 0.</li>
+% </ul>
 % @end
--spec compare(calendar:datetime(), calendar:datetime()) -> -1 | 1 | 0.
+-spec compare(DateTime1 :: calendar:datetime(), DateTime2 :: calendar:datetime()) -> -1 | 1 | 0.
 compare(Date1, Date2) ->
     SecDate1 = calendar:datetime_to_gregorian_seconds(Date1),
     SecDate2 = calendar:datetime_to_gregorian_seconds(Date2),
@@ -190,29 +246,29 @@ to_iso8601(Date) ->
     format("Y-m-dTH:i:s", Date) ++ local_timezone().
 
 %% @doc format current local time as Format
--spec format(string()) -> string().
+-spec format(Format :: string() | binary()) -> string().
 format(Format) ->
-    format(Format, calendar:universal_time(), []).
+    format(bucs:to_string(Format), calendar:universal_time(), []).
 
 %% @doc format Date as Format
--spec format(string(), calendar:datetime() | now()) -> string().
-format(Format, {_, _, Ms}=Now) ->
+-spec format(Format :: string() | binary(), DateTime :: calendar:datetime() | now()) -> string().
+format(Format, {_, _, Ms} = Now) ->
     {Date, {H, M, S}} = calendar:now_to_datetime(Now),
-    format(Format, {Date, {H, M, S, Ms}}, []);
+    format(bucs:to_string(Format), {Date, {H, M, S, Ms}}, []);
 format(Format, Date) ->
-    format(Format, Date, []).
+    format(bucs:to_string(Format), Date, []).
 
 %% @doc parses the datetime from a string
--spec parse(string()) -> calendar:datetime().
+-spec parse(Date :: string() | binary()) -> calendar:datetime().
 parse(Date) ->
-    do_parse(Date, calendar:universal_time(), []).
+    do_parse(bucs:to_string(Date), calendar:universal_time(), []).
 
 %% @doc parses the datetime from a string
--spec parse(string(), calendar:datetime() | now()) -> calendar:datetime().
-parse(Date, {_, _, _}=Now) ->
-    do_parse(Date, calendar:now_to_datetime(Now), []);
+-spec parse(Date :: string() | binary(), DateTime :: calendar:datetime() | now()) -> calendar:datetime().
+parse(Date, {_, _, _} = Now) ->
+    do_parse(bucs:to_string(Date), calendar:now_to_datetime(Now), []);
 parse(Date, Now) ->
-    do_parse(Date, Now, []).
+    do_parse(bucs:to_string(Date), Now, []).
 
 do_parse(Date, Now, Opts) ->
     case filter_hints(parse(tokenise(string:to_upper(Date), []), Now, Opts)) of
@@ -245,7 +301,7 @@ filter_hints({{Y, {?MONTH_TAG, M}, D}, {H, M1, S}, {Ms}}) ->
 filter_hints(Other) ->
     Other.
 
--spec nparse(string()) -> now().
+-spec nparse(Date :: string() | binary()) -> now().
 %% @doc parses the datetime from a string into 'now' format
 nparse(Date) ->
     case parse(Date) of
@@ -765,4 +821,3 @@ pad2(X) when is_float(X) ->
 
 ltoi(X) ->
     list_to_integer(X).
-

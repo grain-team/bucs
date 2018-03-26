@@ -14,6 +14,10 @@
          nsplit/2
         ]).
 
+% @doc
+% Add or replace the <tt>Tuple</tt> in the <tt>List</tt>.
+% @end
+-spec keyupdate(Key :: term(), N :: integer(), List :: list(), Tuple :: tuple()) -> list().
 keyupdate(Key, N, List, Tuple) ->
   case lists:keyfind(Key, N, List) of
     false ->
@@ -23,8 +27,9 @@ keyupdate(Key, N, List, Tuple) ->
   end.
 
 % @doc
+% Run all <tt>Funs</tt> on each elements of the <tt>List</tt>
 % @end
--spec pipemap(list(), list()) -> list().
+-spec pipemap([fun((term()) -> term())], list()) -> list().
 pipemap(Funs, List) ->
   lists:map(fun(E) ->
                 bucs:pipecall(
@@ -47,8 +52,13 @@ keyufind(Key, N, TupleList) ->
   keyufind(Key, N, TupleList, false).
 
 % @doc
+% Searches the list of tuples <tt>TupleList</tt> for a tuple whose
+% <tt>N</tt>th element compares equal to <tt>Key</tt>.
+% Returns the second element of the Tuple if such a tuple is found
+% and has only two elements, the tuple if it has more than two elements,
+% otherwise <tt>Default</tt>.
 % @end
--spec keyfind(term(), integer(), [tuple()], term()) -> term().
+-spec keyfind(Key :: term(), N :: integer(), TupleList :: [tuple()], Default :: term()) -> term().
 keyfind(Key, N, TupleList, Default) ->
   case lists:keyfind(Key, N, TupleList) of
     {Key, Value} -> Value;
@@ -57,7 +67,12 @@ keyfind(Key, N, TupleList, Default) ->
   end.
 
 % @doc
+% Searches the list of tuples <tt>TupleList</tt> for a tuple whose
+% <tt>N</tt>th element compares equal to <tt>Key</tt>.
+% Returns the <tt>M</tt>th element of the Tuple if such a tuple is found,
+% otherwise <tt>Default</tt>.
 % @end
+-spec keyfind(Key :: term(), N :: integer(), TupleList :: [tuple()], M :: integer(), Default :: term()) -> term().
 keyfind(Key, N, TupleList, M, Default) ->
   case lists:keyfind(Key, N, TupleList) of
     false -> Default;
@@ -75,7 +90,9 @@ keyufind(Key, N, TupleList, Default) ->
 
 
 %% @doc
+%% Remove alla elements from the <tt>List</tt> when <tt>Fun(Element)</tt> return false.
 %% @end
+-spec delete_if(Fun :: fun((term()) -> true | false), List :: list()) -> list().
 delete_if(Fun, List) ->
   lists:reverse(lists:foldl(fun(E, Acc) ->
                                 case Fun(E) of
@@ -157,4 +174,3 @@ nsplit(List, Size, N, Acc) ->
     {R, Rest} ->
       nsplit(Rest, Size - erlang:length(R), N - 1, [R|Acc])
   end.
-

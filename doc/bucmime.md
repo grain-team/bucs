@@ -9,7 +9,7 @@
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#exploded-1">exploded/1</a></td><td></td></tr><tr><td valign="top"><a href="#type-1">type/1</a></td><td></td></tr></table>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#exploded-1">exploded/1</a></td><td>return the <tt>File</tt> mimetype.</td></tr><tr><td valign="top"><a href="#type-1">type/1</a></td><td>return the <tt>File</tt> mimetype.</td></tr></table>
 
 
 <a name="functions"></a>
@@ -20,11 +20,21 @@
 
 ### exploded/1 ###
 
-`exploded(File) -> any()`
+<pre><code>
+exploded(File::<a href="file.md#type-filename_all">file:filename_all()</a>) -&gt; {binary(), binary()}
+</code></pre>
+<br />
+
+return the `File` mimetype.
 
 <a name="type-1"></a>
 
 ### type/1 ###
 
-`type(File) -> any()`
+<pre><code>
+type(File::<a href="file.md#type-filename_all">file:filename_all()</a>) -&gt; binary()
+</code></pre>
+<br />
+
+return the `File` mimetype.
 

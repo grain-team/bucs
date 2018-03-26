@@ -10,9 +10,9 @@
 
 
 <table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#gsub-3">gsub/3</a></td><td>
-Return an new string with the all occurances of Old substitued by New.</td></tr><tr><td valign="top"><a href="#split-2">split/2</a></td><td>
+Return an new string with the all occurances of <tt>Old</tt> substitued by <tt>New</tt></td></tr><tr><td valign="top"><a href="#split-2">split/2</a></td><td>
 Split string.</td></tr><tr><td valign="top"><a href="#sub-3">sub/3</a></td><td>
-Return an new string with the first occurance of Old substitued by New.</td></tr></table>
+Return an new string with the first occurance of <tt>Old</tt> substitued by <tt>New</tt></td></tr></table>
 
 
 <a name="functions"></a>
@@ -28,7 +28,7 @@ gsub(Str::string(), Old::string(), New::string()) -&gt; string()
 </code></pre>
 <br />
 
-Return an new string with the all occurances of Old substitued by New
+Return an new string with the all occurances of `Old` substitued by `New`
 
 Example:
 
@@ -41,7 +41,10 @@ Example:
 
 ### split/2 ###
 
-`split(String, Token) -> any()`
+<pre><code>
+split(Str::string(), Token::string()) -&gt; string()
+</code></pre>
+<br />
 
 Split string
 
@@ -54,7 +57,7 @@ sub(Str::string(), Old::string(), New::string()) -&gt; string()
 </code></pre>
 <br />
 
-Return an new string with the first occurance of Old substitued by New
+Return an new string with the first occurance of `Old` substitued by `New`
 
 Example:
 

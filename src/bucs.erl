@@ -42,6 +42,12 @@
          eval/2
         ]).
 
+-type type() :: binary | list | string | atom | float | integer | pid | reference | port | tuple | map | function | boolean.
+
+% @doc
+% Convert <tt>Data</tt> in type <tt>Type</tt>.
+% @end
+-spec to(Type :: type(), Data :: term()) -> term().
 to(atom, Data) -> to_atom(Data);
 to(list, Data) -> to_list(Data);
 to(string, Data) -> to_string(Data);
@@ -51,8 +57,19 @@ to(float, Data) -> to_float(Data);
 to(term, Data) -> to_term(Data);
 to(_, Data) -> Data.
 
+% @doc
+% Return <tt>Data</tt> in the same type than <tt>Type</tt>.
+%
+% <pre>
+% bucs:as("this is a string", &lt;&lt;"this is a binary"&gt;&gt;).
+% % => "this is a binary"
+% </pre>
+% @end
+-spec as(Type :: term(), Data :: term()) -> term().
 as(Type, Data) -> to(type(Type), Data).
 
+% @doc Return the type (atom, string, float, ...) of <tt>Data</tt>
+-spec type(Data :: term()) -> type().
 type(Data) when is_atom(Data) -> atom;
 type(Data) when is_list(Data) ->
   case is_string(Data) of
@@ -71,6 +88,10 @@ type(Data) when is_function(Data) -> function;
 type(Data) when is_boolean(Data) -> boolean;
 type(_) -> undefined.
 
+% @doc
+% Return true if <tt>Data</tt> is of type <tt>Type</tt>
+% @end
+-spec is_type(Data :: term(), Type :: type()) -> true | false.
 is_type(Data, Type) when Type == binary;
                          Type == list;
                          Type == string;

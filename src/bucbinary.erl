@@ -15,7 +15,8 @@
 %% @doc
 %% Generate random binary
 %% @end
-rand_bits(Bits) ->
+-spec rand_bits(Bits :: non_neg_integer()) -> binary().
+rand_bits(Bits) when erlang:is_integer(Bits), Bits >= 0->
   Bytes = (Bits + 7) div 8,
   <<Result:Bits/bits, _/bits>> = crypto:strong_rand_bytes(Bytes),
   Result.
@@ -23,6 +24,7 @@ rand_bits(Bits) ->
 %% @doc
 %% Convert a binary to and Hex string
 %% @end
+-spec to_hexstr(Bin :: binary()) -> list().
 to_hexstr(Bin) when is_binary(Bin) ->
   lists:flatten([io_lib:format("~2.16.0B", [X]) ||
     X <- binary_to_list(Bin)]).
@@ -30,6 +32,7 @@ to_hexstr(Bin) when is_binary(Bin) ->
 %% @doc
 %% Convert a Hex string to binary
 %% @end
+-spec from_hexstr(String :: list()) -> binary().
 from_hexstr(S) when is_list(S) ->
   hexstr_to_bin(S, []).
 hexstr_to_bin([], Acc) ->
@@ -47,7 +50,7 @@ hexstr_to_bin([X, Y|T], Acc) ->
 %% &lt;&lt;"toto-tata-titi"&gt;&gt; = bucbinary:join([&lt;&lt;"toto"&gt;&gt;, &lt;&lt;"tata"&gt;&gt;, &lt;&lt;"titi"&gt;&gt;], &lt;&lt;"-"&gt;&gt;).
 %% </pre>
 %% @end
--spec join([binary()], binary()) -> binary().
+-spec join([term()], binary()) -> binary().
 join([], _) ->
   <<>>;
 join(L, S) when is_list(L), is_binary(S) ->
@@ -61,7 +64,10 @@ join([E|R], S, <<>>) ->
 join([E|R], S, Acc) ->
   join(R, S, <<Acc/binary, S/binary, (bucs:to_binary(E))/binary>>).
 
-- spec trim(binary(), left | right | both) -> binary().
+% @doc
+% Trim a binary
+% @end
+- spec trim(Binary :: binary(), Direction :: left | right | both) -> binary().
 trim(Binary, left) ->
   trim_left(Binary);
 trim(Binary, right) ->
@@ -90,7 +96,10 @@ trim_right(Binary, Size) ->
       Other
   end.
 
--spec are_floats([binary()]) -> true | false.
+% @doc
+% Return true if all binaries in the given list can be converted to float ; false otherwise
+% @end
+-spec are_floats(Binaries :: [binary()]) -> true | false.
 are_floats([]) ->
   false;
 are_floats(List) ->
@@ -100,7 +109,10 @@ are_floats([], Acc) ->
 are_floats([E|Rest], Acc) ->
   are_floats(Rest, bucbinary:is_float(E) andalso Acc).
 
--spec is_float(binary()) -> true | false.
+% @doc
+% Return true if the given binary can be converted to float ; false otherwise
+% @end
+-spec is_float(Binary :: binary()) -> true | false.
 is_float(<<>>) ->
   false;
 is_float(Data) ->
@@ -111,7 +123,10 @@ is_float(Data) ->
       false
   end.
 
--spec are_integers([binary()]) -> true | false.
+% @doc
+% Return true if all binaries in the given list can be converted to integer ; false otherwise
+% @end
+-spec are_integers(Binaries :: [binary()]) -> true | false.
 are_integers([]) ->
   false;
 are_integers(List) ->
@@ -121,7 +136,10 @@ are_integers([], Acc) ->
 are_integers([E|Rest], Acc) ->
   are_integers(Rest, bucbinary:is_integer(E) andalso Acc).
 
--spec is_integer(binary()) -> true | false.
+% @doc
+% Return true if the given binary can be converted to integer ; false otherwise
+% @end
+-spec is_integer(Binary :: binary()) -> true | false.
 is_integer(<<>>) ->
   false;
 is_integer(Data) ->

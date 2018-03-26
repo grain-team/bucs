@@ -151,7 +151,10 @@ Return true if `Path` is a symlink, false otherwise
 
 ### make_dir/1 ###
 
-`make_dir(Path) -> any()`
+<pre><code>
+make_dir(Path::string() | binary()) -&gt; ok | {error, term()}
+</code></pre>
+<br />
 
 Create the given directory if it not exist
 
@@ -242,7 +245,10 @@ Return the given `FilePath` relatively to the `FromPath`.
 
 ### remove_recursive/1 ###
 
-`remove_recursive(Path) -> any()`
+<pre><code>
+remove_recursive(Path::string() | binary()) -&gt; ok | {error, term()}
+</code></pre>
+<br />
 
 Remove, recursively the given path
 

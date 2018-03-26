@@ -9,11 +9,16 @@
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#are_floats-1">are_floats/1</a></td><td></td></tr><tr><td valign="top"><a href="#are_integers-1">are_integers/1</a></td><td></td></tr><tr><td valign="top"><a href="#from_hexstr-1">from_hexstr/1</a></td><td>
-Convert a Hex string to binary.</td></tr><tr><td valign="top"><a href="#is_float-1">is_float/1</a></td><td></td></tr><tr><td valign="top"><a href="#is_integer-1">is_integer/1</a></td><td></td></tr><tr><td valign="top"><a href="#join-2">join/2</a></td><td>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#are_floats-1">are_floats/1</a></td><td>
+Return true if all binaries in the given list can be converted to float ; false otherwise.</td></tr><tr><td valign="top"><a href="#are_integers-1">are_integers/1</a></td><td>
+Return true if all binaries in the given list can be converted to integer ; false otherwise.</td></tr><tr><td valign="top"><a href="#from_hexstr-1">from_hexstr/1</a></td><td>
+Convert a Hex string to binary.</td></tr><tr><td valign="top"><a href="#is_float-1">is_float/1</a></td><td>
+Return true if the given binary can be converted to float ; false otherwise.</td></tr><tr><td valign="top"><a href="#is_integer-1">is_integer/1</a></td><td>
+Return true if the given binary can be converted to integer ; false otherwise.</td></tr><tr><td valign="top"><a href="#join-2">join/2</a></td><td>
 join a list of binaries with the given separator.</td></tr><tr><td valign="top"><a href="#rand_bits-1">rand_bits/1</a></td><td>
 Generate random binary.</td></tr><tr><td valign="top"><a href="#to_hexstr-1">to_hexstr/1</a></td><td>
-Convert a binary to and Hex string.</td></tr><tr><td valign="top"><a href="#trim-2">trim/2</a></td><td></td></tr></table>
+Convert a binary to and Hex string.</td></tr><tr><td valign="top"><a href="#trim-2">trim/2</a></td><td>
+Trim a binary.</td></tr></table>
 
 
 <a name="functions"></a>
@@ -25,24 +30,31 @@ Convert a binary to and Hex string.</td></tr><tr><td valign="top"><a href="#trim
 ### are_floats/1 ###
 
 <pre><code>
-are_floats(List::[binary()]) -&gt; true | false
+are_floats(Binaries::[binary()]) -&gt; true | false
 </code></pre>
 <br />
+
+Return true if all binaries in the given list can be converted to float ; false otherwise
 
 <a name="are_integers-1"></a>
 
 ### are_integers/1 ###
 
 <pre><code>
-are_integers(List::[binary()]) -&gt; true | false
+are_integers(Binaries::[binary()]) -&gt; true | false
 </code></pre>
 <br />
+
+Return true if all binaries in the given list can be converted to integer ; false otherwise
 
 <a name="from_hexstr-1"></a>
 
 ### from_hexstr/1 ###
 
-`from_hexstr(S) -> any()`
+<pre><code>
+from_hexstr(String::list()) -&gt; binary()
+</code></pre>
+<br />
 
 Convert a Hex string to binary
 
@@ -51,25 +63,29 @@ Convert a Hex string to binary
 ### is_float/1 ###
 
 <pre><code>
-is_float(Data::binary()) -&gt; true | false
+is_float(Binary::binary()) -&gt; true | false
 </code></pre>
 <br />
+
+Return true if the given binary can be converted to float ; false otherwise
 
 <a name="is_integer-1"></a>
 
 ### is_integer/1 ###
 
 <pre><code>
-is_integer(Data::binary()) -&gt; true | false
+is_integer(Binary::binary()) -&gt; true | false
 </code></pre>
 <br />
+
+Return true if the given binary can be converted to integer ; false otherwise
 
 <a name="join-2"></a>
 
 ### join/2 ###
 
 <pre><code>
-join(L::[binary()], S::binary()) -&gt; binary()
+join(L::[term()], S::binary()) -&gt; binary()
 </code></pre>
 <br />
 
@@ -86,7 +102,10 @@ Example:
 
 ### rand_bits/1 ###
 
-`rand_bits(Bits) -> any()`
+<pre><code>
+rand_bits(Bits::non_neg_integer()) -&gt; binary()
+</code></pre>
+<br />
 
 Generate random binary
 
@@ -94,7 +113,10 @@ Generate random binary
 
 ### to_hexstr/1 ###
 
-`to_hexstr(Bin) -> any()`
+<pre><code>
+to_hexstr(Bin::binary()) -&gt; list()
+</code></pre>
+<br />
 
 Convert a binary to and Hex string
 
@@ -103,7 +125,9 @@ Convert a binary to and Hex string
 ### trim/2 ###
 
 <pre><code>
-trim(Binary::binary(), X2::left | right | both) -&gt; binary()
+trim(Binary::binary(), Direction::left | right | both) -&gt; binary()
 </code></pre>
 <br />
+
+Trim a binary
 

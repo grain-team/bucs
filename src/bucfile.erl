@@ -88,14 +88,16 @@ user_home() ->
 %% @doc
 %% Create the given directory if it not exist
 %% @end
+-spec make_dir(Path :: string() | binary()) -> ok | {error, term()}.
 make_dir(Path) when is_binary(Path) ->
-  do_as_list(?MODULE, make_dir, Path);
+  make_dir(binary_to_list(Path));
 make_dir(Path) ->
   filelib:ensure_dir(filename:join([Path, "."])).
 
 %% @doc
 %% Remove, recursively the given path
 %% @end
+-spec remove_recursive(Path :: string() | binary()) -> ok | {error, term()}.
 remove_recursive(Path) ->
   case filelib:is_dir(Path) of
     false ->
@@ -318,7 +320,8 @@ is_executable(File, Who) when is_list(Who) ->
 %% @doc
 %% Return the given <tt>FilePath</tt> relatively to the <tt>FromPath</tt>.
 %% @end
-relative_from(FilePath, FromPath) ->
+
+relative_from(FilePath, FromPath) when is_list(FilePath), is_list(FromPath) ->
   case get_real_path(FilePath) of
     {ok, FilePath1} ->
       case get_real_path(FromPath) of
@@ -331,7 +334,11 @@ relative_from(FilePath, FromPath) ->
         E -> E
       end;
     E -> E
-  end.
+  end;
+relative_from(FilePath, FromPath) when is_list(FilePath) ->
+  relative_from(FilePath, bucs:to_string(FromPath));
+relative_from(FilePath, FromPath) when is_binary(FilePath) ->
+  bucs:to_binary(relative_from(bucs:to_string(FilePath), bucs:to_string(FromPath))).
 
 %% @doc
 %% Return the realpath of the given path

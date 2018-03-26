@@ -140,7 +140,7 @@ Return the next datetime from now.
 ### next/2 ###
 
 <pre><code>
-next(Spec::<a href="#type-timer_spec">timer_spec()</a>, From::<a href="calendar.md#type-datetime">calendar:datetime()</a> | <a href="#type-datetime">datetime()</a>) -&gt; {ok, <a href="calendar.md#type-datetime">calendar:datetime()</a>, <a href="calendar.md#type-second">calendar:second()</a>} | {error, term()} | stop
+next(Spec::<a href="#type-timer_spec">timer_spec()</a>, DateTime::<a href="calendar.md#type-datetime">calendar:datetime()</a> | <a href="#type-datetime">datetime()</a>) -&gt; {ok, <a href="calendar.md#type-datetime">calendar:datetime()</a>, <a href="calendar.md#type-second">calendar:second()</a>} | {error, term()} | stop
 </code></pre>
 <br />
 
