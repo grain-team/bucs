@@ -1,8 +1,33 @@
 
 
 # Module bucfile #
+* [Data Types](#types)
 * [Function Index](#index)
 * [Function Details](#functions)
+
+<a name="types"></a>
+
+## Data Types ##
+
+
+
+
+### <a name="type-copy_option">copy_option()</a> ###
+
+
+<pre><code>
+copy_option() = recursive | {exclude, [<a href="file.md#type-filename">file:filename()</a>]} | {only, [<a href="file.md#type-filename">file:filename()</a>]} | <a href="#type-copyfile_option">copyfile_option()</a>
+</code></pre>
+
+
+
+
+### <a name="type-copyfile_option">copyfile_option()</a> ###
+
+
+<pre><code>
+copyfile_option() = preserve_file_info | default_file_info | {directory_mode, integer()} | {regular_file_mode, integer()} | {executable_file_mode, integer()}
+</code></pre>
 
 <a name="index"></a>
 
@@ -13,7 +38,8 @@
 [preserve_file_info, recursive])</tt></a>.</td></tr><tr><td valign="top"><a href="#copy-3">copy/3</a></td><td>
 Copy a <tt>Source</tt> to a <tt>Destination</tt></td></tr><tr><td valign="top"><a href="#copyfile-2">copyfile/2</a></td><td>Equivalent to <a href="#copyfile-3"><tt>copyfile(Source, Destination, [preserve_file_info])</tt></a>.</td></tr><tr><td valign="top"><a href="#copyfile-3">copyfile/3</a></td><td>
 Copy file <tt>Source</tt> to a <tt>Destination</tt></td></tr><tr><td valign="top"><a href="#expand_path-1">expand_path/1</a></td><td>
-Expand the given path.</td></tr><tr><td valign="top"><a href="#is_broken-1">is_broken/1</a></td><td></td></tr><tr><td valign="top"><a href="#is_executable-1">is_executable/1</a></td><td>
+Expand the given path.</td></tr><tr><td valign="top"><a href="#is_broken-1">is_broken/1</a></td><td>
+Return true if <tt>Path</tt> is a broken symlink.</td></tr><tr><td valign="top"><a href="#is_executable-1">is_executable/1</a></td><td>
 Return true if <tt>File</tt> is executable, false otherwise.</td></tr><tr><td valign="top"><a href="#is_executable-2">is_executable/2</a></td><td>
 Return true if <tt>File</tt> is executable for <tt>Who</tt>, false otherwise.</td></tr><tr><td valign="top"><a href="#is_symlink-1">is_symlink/1</a></td><td>
 Return true if <tt>Path</tt> is a symlink, false otherwise.</td></tr><tr><td valign="top"><a href="#make_dir-1">make_dir/1</a></td><td>
@@ -35,7 +61,10 @@ Same as <tt>filelib:wildcard/1</tt> but where expressions listed in <tt>Exclude<
 
 ### copy/2 ###
 
-`copy(Source, Destination) -> any()`
+<pre><code>
+copy(Source::<a href="file.md#type-filename_all">file:filename_all()</a> | <a href="file.md#type-dirname_all">file:dirname_all()</a>, Destination::<a href="file.md#type-filename_all">file:filename_all()</a> | <a href="file.md#type-dirname_all">file:dirname_all()</a>) -&gt; ok | {error, term()}
+</code></pre>
+<br />
 
 Equivalent to [`copy(Source, Destination,[preserve_file_info, recursive])`](#copy-3).
 
@@ -43,7 +72,10 @@ Equivalent to [`copy(Source, Destination,[preserve_file_info, recursive])`](#cop
 
 ### copy/3 ###
 
-`copy(Source, Destination, Options) -> any()`
+<pre><code>
+copy(Source::<a href="file.md#type-filename_all">file:filename_all()</a> | <a href="file.md#type-dirname_all">file:dirname_all()</a>, Destination::<a href="file.md#type-filename_all">file:filename_all()</a> | <a href="file.md#type-dirname_all">file:dirname_all()</a>, Options::[<a href="#type-copy_option">copy_option()</a>]) -&gt; ok | {error, term()}
+</code></pre>
+<br />
 
 Copy a `Source` to a `Destination`
 
@@ -70,7 +102,10 @@ Available options:
 
 ### copyfile/2 ###
 
-`copyfile(Source, Destination) -> any()`
+<pre><code>
+copyfile(Source::<a href="file.md#type-filename_all">file:filename_all()</a>, Destination::<a href="file.md#type-filename_all">file:filename_all()</a>) -&gt; ok | {error, term()}
+</code></pre>
+<br />
 
 Equivalent to [`copyfile(Source, Destination, [preserve_file_info])`](#copyfile-3).
 
@@ -78,7 +113,10 @@ Equivalent to [`copyfile(Source, Destination, [preserve_file_info])`](#copyfile-
 
 ### copyfile/3 ###
 
-`copyfile(Source, Destination, Options) -> any()`
+<pre><code>
+copyfile(Source::<a href="file.md#type-filename_all">file:filename_all()</a>, Destination::<a href="file.md#type-filename_all">file:filename_all()</a>, Options::[<a href="#type-copyfile_option">copyfile_option()</a>]) -&gt; ok | {error, term()}
+</code></pre>
+<br />
 
 Copy file `Source` to a `Destination`
 
@@ -120,11 +158,16 @@ Example:
 
 `is_broken(Path) -> any()`
 
+Return true if `Path` is a broken symlink.
+
 <a name="is_executable-1"></a>
 
 ### is_executable/1 ###
 
-`is_executable(File) -> any()`
+<pre><code>
+is_executable(File::<a href="file.md#type-name_all">file:name_all()</a>) -&gt; map()
+</code></pre>
+<br />
 
 Return true if `File` is executable, false otherwise
 
@@ -229,7 +272,10 @@ Example:
 
 ### realpath/1 ###
 
-`realpath(Path) -> any()`
+<pre><code>
+realpath(Path::<a href="file.md#type-dirname_all">file:dirname_all()</a>) -&gt; <a href="file.md#type-dirname_all">file:dirname_all()</a>
+</code></pre>
+<br />
 
 Return the realpath of the given path
 
@@ -237,7 +283,10 @@ Return the realpath of the given path
 
 ### relative_from/2 ###
 
-`relative_from(FilePath, FromPath) -> any()`
+<pre><code>
+relative_from(FilePath::<a href="file.md#type-filename_all">file:filename_all()</a>, FromPath::<a href="file.md#type-dirname_all">file:dirname_all()</a>) -&gt; <a href="file.md#type-filename_all">file:filename_all()</a> | error
+</code></pre>
+<br />
 
 Return the given `FilePath` relatively to the `FromPath`.
 

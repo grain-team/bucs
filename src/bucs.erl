@@ -32,6 +32,7 @@
          compare_as_atom/2,
          compare_as_integer/2,
          compare_as_binary/2,
+         compare_as_float/2,
          pipecall/1,
          match/2,
          call/3,
@@ -129,6 +130,7 @@ is_type(Data, [Type|Types]) ->
 % atom = bucs:to_atom("atom").
 % </pre>
 % @end
+-spec to_atom(Data :: term()) -> atom().
 to_atom(X) when is_atom(X) ->
   X;
 to_atom(X) when is_binary(X); is_bitstring(X) ->
@@ -152,6 +154,7 @@ to_atom(X) ->
 % "false" = bucs:to_list(false).
 % </pre>
 % @end
+-spec to_list(Data :: term()) -> list().
 to_list(true) ->
   "true";
 to_list(false) ->
@@ -176,6 +179,7 @@ to_list(V) when is_reference(V) ->
 % @doc
 % Convert the given term to string
 % @end
+-spec to_string(Data :: term()) -> string().
 to_string(V) when is_binary(V);
                   is_bitstring(V);
                   is_atom(V);
@@ -203,6 +207,7 @@ to_string(V) ->
 % &lt;&lt;"false"&gt;&gt; = bucs:to_binary(false).
 % </pre>
 % @end
+-spec to_binary(Data :: term()) -> binary().
 to_binary(V) when is_binary(V); is_bitstring(V) ->
   V;
 to_binary(V) when is_float(V) ->
@@ -222,6 +227,7 @@ to_binary(V) ->
 % 123 = bucs:to_integer(123.456).
 % </pre>
 % @end
+-spec to_integer(Data :: term()) -> integer().
 to_integer(I) when is_integer(I) ->
   I;
 to_integer(I) when is_list(I) ->
@@ -253,6 +259,7 @@ to_integer(I) when is_float(I) ->
 % 123.0 = bucs:to_float(123).
 % </pre>
 % @end
+-spec to_float(Data :: term()) -> float().
 to_float(Value) when is_integer(Value) ->
   float(Value);
 to_float(Value) when is_float(Value) ->
@@ -279,6 +286,7 @@ to_float(Value) when is_atom(Value) ->
 % 123.0 = bucs:to_float(123, 3).
 % </pre>
 % @end
+-spec to_float(Data :: term(), Precision :: integer()) -> float().
 to_float(Value, Precision) ->
   to_float(float_to_list(to_float(Value), [{decimals, Precision}])).
 
@@ -287,9 +295,11 @@ to_float(Value, Precision) ->
 %
 % Example
 % <pre>
-%
+% bucs:to_term("{hello, 1}").
+% % => {hello, 1}
 % </pre>
 % @end
+-spec to_term(Data :: term()) -> term().
 to_term(Value) ->
   try
     Value0 = to_string(Value),
@@ -307,13 +317,14 @@ to_term(Value) ->
       {error, Error}
   end.
 
-% @deprecated
+% @deprecated use module_exists/1
 module_exist(Module) ->
   module_exists(Module).
 
 % @doc
 % Check if the given module exist
 % @end
+-spec module_exists(Module :: module()) -> true | false.
 module_exists(Module) ->
   case is_atom(Module) of
     true ->
@@ -328,13 +339,14 @@ module_exists(Module) ->
       false
   end.
 
-% @deprecated
+% @deprecated use function_exists/3
 function_exist(Module, Function, Arity) ->
   function_exists(Module, Function, Arity).
 
 % @doc
 % Check if the given function exist
 % @end
+-spec function_exists(Module :: module(), Function :: atom(), Arity :: integer()) -> true | false.
 function_exists(Module, Function, Arity) ->
   case code:ensure_loaded(Module) of
     {module, Module} ->
@@ -344,7 +356,10 @@ function_exists(Module, Function, Arity) ->
   end.
 
 % @doc
+% Execute the given function and return the result or <tt>Default</tt> if the function
+% does not exists
 % @end
+-spec apply(Module :: module(), Function :: atom(), Args :: [term()], Default :: term()) -> term().
 apply(Module, Function, Args, Default) ->
   case function_exists(Module, Function, length(Args)) of
     true ->
@@ -354,7 +369,10 @@ apply(Module, Function, Args, Default) ->
   end.
 
 % @doc
+% Execute the given function and return the result or <tt>Default</tt> if the function
+% does not exists
 % @end
+-spec apply(FunOrModule :: function() | module(), ArgsOrFunction :: [term()] | atom(), DefaultOrArgs :: term() | [term()]) -> {ok, term() | error}.
 apply(Fun, Args, Default) when is_function(Fun),
                                is_list(Args) ->
   case bucs:apply(Fun, Args) of
@@ -371,6 +389,10 @@ apply(Module, Function, Args) when is_atom(Module),
       error
   end.
 
+% @doc
+% Execute the given function and return its result.
+% @end
+-spec apply(Fun :: function(), Args :: [term()]) -> {ok, term()} | error.
 apply(Fun, Args) ->
   try
     {ok, erlang:apply(Fun, Args)}
@@ -382,6 +404,7 @@ apply(Fun, Args) ->
 % @doc
 % Check if the given value is a string
 % @end
+-spec is_string(Data :: term()) -> true | false.
 is_string(V) when is_list(V) ->
   io_lib:printable_list(V) orelse io_lib:printable_latin1_list(V) orelse io_lib:printable_unicode_list(V);
 is_string(_) -> false.
@@ -389,6 +412,7 @@ is_string(_) -> false.
 % @doc
 % Check if the given value is a keyword list
 % @end
+-spec is_kw_list(Data :: term()) -> true | false.
 is_kw_list(V) when is_list(V) ->
   lists:all(fun
               ({_, _}) -> true;
@@ -399,6 +423,7 @@ is_kw_list(_) -> false.
 % @doc
 % Check if the given value is a list of lists
 % @end
+-spec is_list_of_lists(Data :: term()) -> true | false.
 is_list_of_lists(L) ->
   is_list(L) andalso
   lists:all(fun(E) ->
@@ -408,22 +433,49 @@ is_list_of_lists(L) ->
 % @doc
 % Return true if <tt>A</tt> match <tt>B</tt>. false otherwise.
 % @end
+-spec match(A :: term(), B :: term()) -> true | false.
 match(A, B) ->
   case A of
     B -> true;
     _ -> false
   end.
 
+% @doc
+% Compare <tt>A</tt> and <tt>B</tt> as if they were lists
+% @end
+-spec compare_as_list(A :: term(), B :: term()) -> true | false.
 compare_as_list(V1, V2) ->
   compare_as(fun to_list/1, V1, V2).
+% @doc
+% Compare <tt>A</tt> and <tt>B</tt> as if they were strings
+% @end
+-spec compare_as_string(A :: term(), B :: term()) -> true | false.
 compare_as_string(V1, V2) ->
   compare_as(fun to_string/1, V1, V2).
+% @doc
+% Compare <tt>A</tt> and <tt>B</tt> as if they were atoms
+% @end
+-spec compare_as_atom(A :: term(), B :: term()) -> true | false.
 compare_as_atom(V1, V2) ->
   compare_as(fun to_atom/1, V1, V2).
+% @doc
+% Compare <tt>A</tt> and <tt>B</tt> as if they were integers
+% @end
+-spec compare_as_integer(A :: term(), B :: term()) -> true | false.
 compare_as_integer(V1, V2) ->
   compare_as(fun to_integer/1, V1, V2).
+% @doc
+% Compare <tt>A</tt> and <tt>B</tt> as if they were binaries
+% @end
+-spec compare_as_binary(A :: term(), B :: term()) -> true | false.
 compare_as_binary(V1, V2) ->
   compare_as(fun to_binary/1, V1, V2).
+% @doc
+% Compare <tt>A</tt> and <tt>B</tt> as if they were floats
+% @end
+-spec compare_as_float(A :: term(), B :: term()) -> true | false.
+compare_as_float(V1, V2) ->
+  compare_as(fun to_float/1, V1, V2).
 
 compare_as(Fun, V1, V2) ->
   V11 = Fun(V1),
@@ -453,6 +505,7 @@ compare_as(Fun, V1, V2) ->
 %                     ]).
 % </pre>
 % @end
+-spec pipecall([{function(), [term()]}]) -> term().
 pipecall([{Call, Args}|Rest]) ->
   pipecall(Rest, erlang:apply(Call, Args));
 pipecall([Call|Rest]) ->
@@ -481,7 +534,9 @@ call(Module, Function, Args) ->
   end.
 
 % @doc
+% Return true if <tt>Data</tt> is <i>blank</i>
 % @end
+-spec blank(Data :: term()) -> true | false.
 blank([]) -> true;
 blank({}) -> true;
 blank(<<>>) -> true;
@@ -500,12 +555,16 @@ blank(X) ->
   end.
 
 % @doc
+% Return true if <tt>Data</tt> is <i>not blank</i>
 % @end
+-spec present(Data :: term()) -> true | false.
 present(X) ->
   not blank(X).
 
 % @doc
+% Return <tt>Default</tt> if <tt>Data</tt> is black, <tt>Data</tt> otherwise.
 % @end
+-spec default_to(Data :: term(), Default :: term()) -> term().
 default_to(X, Default) ->
   case blank(X) of
     true ->
@@ -514,9 +573,26 @@ default_to(X, Default) ->
       X
   end.
 
+% @equiv eval(Expression, [])
+-spec eval(Expression :: term()) -> {value, term(), list()} | {error, erl_scan:error_info(), erl_anno:location()} | {error, erl_parse:error_info()}.
 eval(Value) ->
   eval(Value, []).
 
+% @doc
+% Evaluate the given <tt>Expression</tt> with the given <tt>Environment</tt>.
+%
+% <pre>
+% bucs:eval({toto, 1}).
+% % => {value,{toto,1},[]}
+%
+% bucs:eval("{toto, 1}").
+% % => {value,{toto,1},[]}
+%
+% bucs:eval(&lt;&lt;"bucs:eval({toto, 1})"&gt;&gt;).
+% % => {value,{value,{toto,1},[]},[]}
+% </pre>
+% @end
+-spec eval(Expression :: term(), Environment :: list()) -> {value, term(), list()} | {error, erl_scan:error_info(), erl_anno:location()} | {error, erl_parse:error_info()}.
 eval(Value, Environ) ->
   Value0 = to_string(Value),
   Value1 = case lists:reverse(Value0) of
@@ -536,7 +612,19 @@ eval(Value, Environ) ->
   end.
 
 % @doc
+% Return true if <tt>Tuple</tt> is a tuple matching the tuple <tt>Pattern</tt>
+%
+% <tt>Pattern</tt> can contains <tt>types()</tt>.
+%
+% <pre>
+% bucs:is_tuple_of({1, "hello", world}, {integer, string, atom}).
+% % => true
+%
+% bucs:is_tuple_of({1, "hello", world}, {integer, string, binary}).
+% % => false
+% </pre>
 % @end
+-spec is_tuple_of(Tuple :: tuple(), Pattern :: tuple()) -> true | false.
 is_tuple_of(Tuple, Pattern) when is_tuple(Tuple), is_tuple(Pattern), size(Tuple) == size(Pattern) ->
   check_tuple_pattern(to_list(Tuple), to_list(Pattern));
 is_tuple_of(_Tuple, _Pattern) ->

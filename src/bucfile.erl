@@ -23,6 +23,16 @@
         ]).
 -include_lib("kernel/include/file.hrl").
 
+-type copyfile_option() :: preserve_file_info
+                           | default_file_info
+                           | {directory_mode, integer()}
+                           | {regular_file_mode, integer()}
+                           | {executable_file_mode, integer()}.
+-type copy_option() :: recursive
+                       | {exclude, [file:filename()]}
+                       | {only, [file:filename()]}
+                       | copyfile_option().
+
 %% @doc
 %% Expand the given path
 %%
@@ -33,7 +43,7 @@
 %% &lt;&lt;"/home/user"&gt;&gt; = bucfile:expand_path(&lt;&lt;"~"&gt;&gt;).
 %% </pre>
 %% @end
--spec expand_path(string() | binary()) -> binary() | list().
+-spec expand_path(Path :: string() | binary()) -> binary() | list().
 expand_path(Path) when is_binary(Path) ->
   do_as_list(?MODULE, expand_path, Path);
 expand_path(Path) when is_list(Path) ->
@@ -50,7 +60,7 @@ expand_path(Path) when is_list(Path) ->
 %% "/toto/titi" = bucfile:normalize_path("/toto/tata/../titi").
 %% </pre>
 %% @end
--spec normalize_path(string() | binary()) -> string() | binary().
+-spec normalize_path(Path :: string() | binary()) -> string() | binary().
 normalize_path(Path) when is_binary(Path) ->
   do_as_list(?MODULE, normalize_path, Path);
 normalize_path(Path) when is_list(Path) ->
@@ -108,8 +118,10 @@ remove_recursive(Path) ->
   end.
 
 %% @equiv copy(Source, Destination, [preserve_file_info, recursive])
+-spec copy(Source :: file:filename_all() | file:dirname_all(),
+           Destination :: file:filename_all() | file:dirname_all()) -> ok | {error, term()}.
 copy(Source, Destination) ->
-  do_copy(Source, Destination, [preserve_file_info, recursive]).
+  copy(Source, Destination, [preserve_file_info, recursive]).
 
 %% @doc
 %% Copy a <tt>Source</tt> to a <tt>Destination</tt>
@@ -126,6 +138,9 @@ copy(Source, Destination) ->
 %%   <li><tt>{executable_file_mode, integer()}</tt></li>
 %% </ul>
 %% @end
+-spec copy(Source :: file:filename_all() | file:dirname_all(),
+           Destination :: file:filename_all() | file:dirname_all(),
+           Options :: [copy_option()]) -> ok | {error, term()}.
 copy(Source, Destination, Options) ->
   case lists:foldl(fun(Option, Acc) ->
                        case lists:member(Option, Options) of
@@ -137,8 +152,8 @@ copy(Source, Destination, Options) ->
                            end
                        end
                    end, false, [default_file_info, preserve_file_info, regular_file_mode, executable_file_mode, directory_mode]) of
-    true -> do_copy(Source, Destination, Options);
-    false -> do_copy(Source, Destination, [preserve_file_info|Options])
+    true -> do_copy(bucs:to_string(Source), bucs:to_string(Destination), Options);
+    false -> do_copy(bucs:to_string(Source), bucs:to_string(Destination), [preserve_file_info|Options])
   end.
 
 do_copy(Source, Destination, Options) ->
@@ -181,7 +196,7 @@ do_copy(Source, Destination, Options) ->
                             end, SubFiles1)
                       end,
           lists:foreach(fun(File) ->
-                            do_copy(File, Dest, Options)
+                            do_copy(bucs:to_string(File), bucs:to_string(Dest), Options)
                         end, SubFiles2)
       end;
     false ->
@@ -197,6 +212,7 @@ build_dir(Source, Destination, Options) ->
   end.
 
 %% @equiv copyfile(Source, Destination, [preserve_file_info])
+-spec copyfile(Source :: file:filename_all(), Destination :: file:filename_all()) -> ok | {error, term()}.
 copyfile(Source, Destination) ->
   copyfile(Source, Destination, [preserve_file_info]).
 %% @doc
@@ -211,6 +227,7 @@ copyfile(Source, Destination) ->
 %%   <li><tt>{executable_file_mode, integer()}</tt></li>
 %% </ul>
 %% @end
+-spec copyfile(Source :: file:filename_all(), Destination :: file:filename_all(), Options :: [copyfile_option()]) -> ok | {error, term()}.
 copyfile(Source, Destination, Options) ->
   case (is_symlink(Source) andalso (not is_broken(Source))) orelse (not is_symlink(Source)) of
     true ->
@@ -286,6 +303,7 @@ change_file_mode(_, Destination, {directory_mode, Mode}) ->
 % @doc
 % Return true if <tt>File</tt> is executable, false otherwise
 % @end
+-spec is_executable(File :: file:name_all()) -> map().
 is_executable(File) ->
   case file:read_file_info(File) of
     {ok, #file_info{mode = Mode}} ->
@@ -320,7 +338,7 @@ is_executable(File, Who) when is_list(Who) ->
 %% @doc
 %% Return the given <tt>FilePath</tt> relatively to the <tt>FromPath</tt>.
 %% @end
-
+-spec relative_from(FilePath :: file:filename_all(), FromPath :: file:dirname_all()) -> file:filename_all() | error.
 relative_from(FilePath, FromPath) when is_list(FilePath), is_list(FromPath) ->
   case get_real_path(FilePath) of
     {ok, FilePath1} ->
@@ -331,9 +349,9 @@ relative_from(FilePath, FromPath) when is_list(FilePath), is_list(FromPath) ->
               relative_from1(
                 filename:split(FilePath1),
                 filename:split(FromPath1))));
-        E -> E
+        _E -> error
       end;
-    E -> E
+    _E -> error
   end;
 relative_from(FilePath, FromPath) when is_list(FilePath) ->
   relative_from(FilePath, bucs:to_string(FromPath));
@@ -343,6 +361,7 @@ relative_from(FilePath, FromPath) when is_binary(FilePath) ->
 %% @doc
 %% Return the realpath of the given path
 %% @end
+-spec realpath(Path :: file:dirname_all()) -> file:dirname_all().
 realpath(Path) ->
   filename:join(
     realpath(
@@ -455,6 +474,7 @@ is_symlink(Path) ->
   end.
 
 %% @doc
+%% Return true if <tt>Path</tt> is a broken symlink.
 %% @end
 is_broken(Path) ->
   case is_symlink(Path) of

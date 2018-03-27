@@ -87,6 +87,9 @@ defmodule Bucs do
   def unquote(:"compare_as_binary")(arg1, arg2) do
     :erlang.apply(:"bucs", :"compare_as_binary", [arg1, arg2])
   end
+  def unquote(:"compare_as_float")(arg1, arg2) do
+    :erlang.apply(:"bucs", :"compare_as_float", [arg1, arg2])
+  end
   def unquote(:"pipecall")(arg1) do
     :erlang.apply(:"bucs", :"pipecall", [arg1])
   end
