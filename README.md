@@ -34,6 +34,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 <tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucfile.md" class="module">bucfile</a></td></tr>
 <tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucfloat.md" class="module">bucfloat</a></td></tr>
 <tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucinet.md" class="module">bucinet</a></td></tr>
+<tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/buclambda.md" class="module">buclambda</a></td></tr>
 <tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/buclists.md" class="module">buclists</a></td></tr>
 <tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucmaps.md" class="module">bucmaps</a></td></tr>
 <tr><td><a href="https://github.com/G-Corp/bucs/blob/master/doc/bucmime.md" class="module">bucmime</a></td></tr>
