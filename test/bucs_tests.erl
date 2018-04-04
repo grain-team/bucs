@@ -21,6 +21,7 @@ bucs_test_() ->
     , ?_test(t_apply())
     , ?_test(t_is())
     , ?_test(t_is_tuple_of())
+    , ?_test(t_is_list_of())
     , ?_test(t_convert_record())
     , ?_test(t_blank())
     , ?_test(t_eval())
@@ -288,6 +289,11 @@ t_is() ->
 t_is_tuple_of() ->
   ?assert(bucs:is_tuple_of({1, "hello", <<"world">>}, {integer_or_float, string_or_list, binary_or_atom})),
   ?assert(bucs:is_tuple_of({1.2, [0, 1, 2], world}, {integer_or_float, string_or_list, binary_or_atom})).
+
+t_is_list_of() ->
+  ?assert(bucs:is_list_of([1, 2, 3.4], integer_or_float)),
+  ?assert(bucs:is_list_of(["hello", "awsome", "world"], string)),
+  ?assertNot(bucs:is_list_of(["hello", awsome, "world"], list)).
 
 t_convert_record() ->
   ?assertMatch([{bar, "baz"}, {camp, "spam"}], ?record_to_list(rec, #rec{})),

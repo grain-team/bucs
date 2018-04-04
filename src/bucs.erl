@@ -27,6 +27,7 @@
          is_list_of_lists/1,
          is_kw_list/1,
          is_tuple_of/2,
+         is_list_of/2,
          compare_as_list/2,
          compare_as_string/2,
          compare_as_atom/2,
@@ -91,8 +92,25 @@ type(_) -> undefined.
 
 % @doc
 % Return true if <tt>Data</tt> is of type <tt>Type</tt>
+%
+% Type can by any <tt>type()</tt> or a <tt>type()</tt> composition.
+%
+% <pre lang="erlang">
+% is_type("hello", string). % =&gt; true
+% is_type(1.2, float). % =&gt; true
+% is_type(3, integer_or_float) % =&gt; true
+%
+% is_type("hello", integer). % =&gt; false
+% is_type(1.2, string). % =&gt; false
+% is_type(hello, string_or_binary_or_list). % =&gt; false
+%
+% is_type("string", string). % =&gt; true
+% is_type([1, 2, 3], string). % =&gt; false
+% is_type("string", list). % =&gt; false
+% is_type([1, 2, 3], list). % =&gt; true
+% </pre>
 % @end
--spec is_type(Data :: term(), Type :: type()) -> true | false.
+-spec is_type(Data :: term(), Type :: type() | atom()) -> true | false.
 is_type(Data, Type) when Type == binary;
                          Type == list;
                          Type == string;
@@ -620,6 +638,9 @@ eval(Value, Environ) ->
 % bucs:is_tuple_of({1, "hello", world}, {integer, string, atom}).
 % % => true
 %
+% bucs:is_tuple_of({1.2, "hello", world}, {integer_or_float, string, atom}).
+% % => true
+%
 % bucs:is_tuple_of({1, "hello", world}, {integer, string, binary}).
 % % => false
 % </pre>
@@ -628,6 +649,28 @@ eval(Value, Environ) ->
 is_tuple_of(Tuple, Pattern) when is_tuple(Tuple), is_tuple(Pattern), size(Tuple) == size(Pattern) ->
   check_tuple_pattern(to_list(Tuple), to_list(Pattern));
 is_tuple_of(_Tuple, _Pattern) ->
+  false.
+
+% @doc
+% Return true if all elements in the <tt>List</tt> are of type <tt>Type</tt>.
+%
+% <pre>
+% bucs:is_list_of([1, 2, 3.4], integer_or_float).
+% % => true
+%
+% bucs:is_list_of(["hello", "awsome", "world"], string).
+% % => true
+%
+% bucs:is_list_of(["hello", awsome, "world"], list).
+% % => false
+% </pre>
+% @end
+-spec is_list_of(List :: list(), Type :: type() | atom()) -> true | false.
+is_list_of(List, Type) when is_list(List), is_atom(Type) ->
+  lists:all(fun(E) ->
+                is_type(E, Type)
+            end, List);
+is_list_of(_List, _Type) ->
   false.
 
 check_tuple_pattern([], []) ->
