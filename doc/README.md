@@ -2,7 +2,7 @@
 
 # Bots Unit Commons #
 
-Copyright (c) 2015, 2016 Bots Unit
+Copyright (c) 2015, 2016 Bots Unit, 2017, 2018 G-Corp
 
 __Version:__ 1.0.0
 
