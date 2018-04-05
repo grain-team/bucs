@@ -6,6 +6,12 @@ defmodule Bucs.String do
   def unquote(:"sub")(arg1, arg2, arg3) do
     :erlang.apply(:"bucstring", :"sub", [arg1, arg2, arg3])
   end
+  def unquote(:"lowercase")(arg1) do
+    :erlang.apply(:"bucstring", :"lowercase", [arg1])
+  end
+  def unquote(:"uppercase")(arg1) do
+    :erlang.apply(:"bucstring", :"uppercase", [arg1])
+  end
   def unquote(:"split")(arg1, arg2) do
     :erlang.apply(:"bucstring", :"split", [arg1, arg2])
   end

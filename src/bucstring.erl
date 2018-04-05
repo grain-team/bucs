@@ -1,6 +1,12 @@
 -module(bucstring).
 
--export([sub/3, gsub/3, split/2]).
+-export([
+         sub/3
+         , gsub/3
+         , split/2
+         , lowercase/1
+         , uppercase/1
+        ]).
 
 %% @doc
 %% Return an new string with the first occurance of <tt>Old</tt> substitued by <tt>New</tt>
@@ -57,9 +63,27 @@ gsub(Str, Old, New, Acc) ->
 %% @end
 -spec split(Str :: string(), Token :: string()) -> string().
 split(String, Token) ->
-  try
-    string:split(String, Token, all)
-  catch
-    error:undef ->
-      string:tokens(String, Token)
+  case bucs:function_exists(string, split, 3) of
+    true ->
+      erlang:apply(string, split, [String, Token, all]);
+    false ->
+      erlang:apply(string, tokens, [String, Token])
+  end.
+
+-spec lowercase(Str :: string()) -> string().
+lowercase(String) ->
+  case bucs:function_exists(string, lowercase, 1) of
+    true ->
+      erlang:apply(string, lowercase, [String]);
+    false ->
+      erlang:apply(string, to_lower, [String])
+  end.
+
+-spec uppercase(Str :: string()) -> string().
+uppercase(String) ->
+  case bucs:function_exists(string, uppercase, 1) of
+    true ->
+      erlang:apply(string, uppercase, [String]);
+    false ->
+      erlang:apply(string, to_upper, [String])
   end.

@@ -9,9 +9,15 @@
 ## Function Index ##
 
 
-<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#curry-3">curry/3</a></td><td> 
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#compose-1">compose/1</a></td><td>
+Performs right-to-left function composition.</td></tr><tr><td valign="top"><a href="#curry-1">curry/1</a></td><td> 
+Returns a curried equivalent of the provided function.</td></tr><tr><td valign="top"><a href="#curry-2">curry/2</a></td><td> 
+Returns a curried equivalent of the provided function, with the specified deep or params.</td></tr><tr><td valign="top"><a href="#curry-3">curry/3</a></td><td> 
 Returns a curried equivalent of the provided function.</td></tr><tr><td valign="top"><a href="#curry-4">curry/4</a></td><td> 
-Returns a curried equivalent of the provided function, with the specified deep or params.</td></tr><tr><td valign="top"><a href="#rcurry-3">rcurry/3</a></td><td>
+Returns a curried equivalent of the provided function, with the specified deep or params.</td></tr><tr><td valign="top"><a href="#pipe-1">pipe/1</a></td><td>
+Performs left-to-right function composition.</td></tr><tr><td valign="top"><a href="#rcurry-1">rcurry/1</a></td><td>
+Returns a <i>reverse</i> curried equivalent of the provided function.</td></tr><tr><td valign="top"><a href="#rcurry-2">rcurry/2</a></td><td>
+Returns a <i>reverse</i> curried equivalent of the provided function, with the specified deep or params.</td></tr><tr><td valign="top"><a href="#rcurry-3">rcurry/3</a></td><td>
 Returns a <i>reverse</i> curried equivalent of the provided function.</td></tr><tr><td valign="top"><a href="#rcurry-4">rcurry/4</a></td><td>
 Returns a <i>reverse</i> curried equivalent of the provided function, with the specified deep or params.</td></tr></table>
 
@@ -19,6 +25,73 @@ Returns a <i>reverse</i> curried equivalent of the provided function, with the s
 <a name="functions"></a>
 
 ## Function Details ##
+
+<a name="compose-1"></a>
+
+### compose/1 ###
+
+<pre><code>
+compose(Functions::[function()]) -&gt; {ok, function()} | error
+</code></pre>
+<br />
+
+Performs right-to-left function composition.
+
+<a name="curry-1"></a>
+
+### curry/1 ###
+
+<pre><code>
+curry(Fun::function()) -&gt; {ok, function()} | error
+</code></pre>
+<br />
+
+
+Returns a curried equivalent of the provided function.
+
+```erlang
+
+ curry:curry(fun lists:keystore/4).
+ % => {ok, #Fun<erl_eval.6.99386804>}
+ % => fun(A0) -> fun(A1) -> fun(A2) -> fun(A3) -> lists:keystore(A0, A1, A2, A3) end end end end.
+```
+
+<a name="curry-2"></a>
+
+### curry/2 ###
+
+<pre><code>
+curry(Fun::function(), DeepOrArgs::integer() | [term()]) -&gt; {ok, function()} | error
+</code></pre>
+<br />
+
+
+Returns a curried equivalent of the provided function, with the specified deep or params.
+
+```erlang
+
+ curry:curry(fun lists:keystore/4, 4).
+ % => {ok, #Fun<erl_eval.6.99386804>}
+ % => fun(A0) -> fun(A1) -> fun(A2) -> fun(A3) -> lists:keystore(A0, A1, A2, A3) end end end end.
+
+ curry:curry(fun lists:keystore/4, 3).
+ % => {ok, #Fun<erl_eval.12.99386804>}
+ % => fun(A0, A1) -> fun(A2) -> fun(A3) -> lists:keystore(A0, A1, A2, A3) end end end.
+
+ curry:curry(fun lists:keystore/4, 2).
+ % =>{ok, #Fun<erl_eval.18.99386804>}
+ % => fun(A0, A1, A2) -> fun(A3) -> lists:keystore(A0, A1, A2, A3) end end.
+
+ curry:curry(fun lists:keystore/4, 1).
+ % => {ok, #Fun<erl_eval.4.99386804>}
+ % => fun(A0, A1, A2, A3) -> lists:keystore(A0, A1, A2, A3) end.
+
+ {ok, F} = curry:curry(fun lists:keyfind/3, [toto, 1]).
+ F([{tata, 1}, {toto, 2}, {titi, 3}]).
+ % => {toto, 2}
+ F([{tata, 1}, {tutu, 2}, {titi, 3}]).
+ % => false
+```
 
 <a name="curry-3"></a>
 
@@ -35,7 +108,7 @@ Returns a curried equivalent of the provided function.
 ```erlang
 
  curry:curry(lists, keystore, 4).
- % => {ok,#Fun<erl_eval.6.99386804>}
+ % => {ok, #Fun<erl_eval.6.99386804>}
  % => fun(A0) -> fun(A1) -> fun(A2) -> fun(A3) -> lists:keystore(A0, A1, A2, A3) end end end end.
 ```
 
@@ -54,25 +127,90 @@ Returns a curried equivalent of the provided function, with the specified deep o
 ```erlang
 
  curry:curry(lists, keystore, 4, 4).
- % => {ok,#Fun<erl_eval.6.99386804>}
+ % => {ok, #Fun<erl_eval.6.99386804>}
  % => fun(A0) -> fun(A1) -> fun(A2) -> fun(A3) -> lists:keystore(A0, A1, A2, A3) end end end end.
 
  curry:curry(lists, keystore, 4, 3).
- % => {ok,#Fun<erl_eval.12.99386804>}
+ % => {ok, #Fun<erl_eval.12.99386804>}
  % => fun(A0, A1) -> fun(A2) -> fun(A3) -> lists:keystore(A0, A1, A2, A3) end end end.
 
  curry:curry(lists, keystore, 4, 2).
- % =>{ok,#Fun<erl_eval.18.99386804>}
+ % =>{ok, #Fun<erl_eval.18.99386804>}
  % => fun(A0, A1, A2) -> fun(A3) -> lists:keystore(A0, A1, A2, A3) end end.
 
  curry:curry(lists, keystore, 4, 1).
- % => {ok,#Fun<erl_eval.4.99386804>}
+ % => {ok, #Fun<erl_eval.4.99386804>}
  % => fun(A0, A1, A2, A3) -> lists:keystore(A0, A1, A2, A3) end.
 
  {ok, F} = curry:curry(lists, keyfind, 3, [toto, 1]).
  F([{tata, 1}, {toto, 2}, {titi, 3}]).
- % => {toto,2}
+ % => {toto, 2}
  F([{tata, 1}, {tutu, 2}, {titi, 3}]).
+ % => false
+```
+
+<a name="pipe-1"></a>
+
+### pipe/1 ###
+
+<pre><code>
+pipe(Functions::[function() | {function(), [term()]}]) -&gt; {ok, function()} | error
+</code></pre>
+<br />
+
+Performs left-to-right function composition.
+
+<a name="rcurry-1"></a>
+
+### rcurry/1 ###
+
+<pre><code>
+rcurry(Fun::function()) -&gt; {ok, function()} | error
+</code></pre>
+<br />
+
+Returns a _reverse_ curried equivalent of the provided function.
+
+```erlang
+
+ curry:rcurry(fun lists:keystore/4).
+ % => {ok, #Fun<erl_eval.6.99386804>}
+ % => fun(A3) -> fun(A2) -> fun(A1) -> fun(A0) -> lists:keystore(A0, A1, A2, A3) end end end end.
+```
+
+<a name="rcurry-2"></a>
+
+### rcurry/2 ###
+
+<pre><code>
+rcurry(Fun::function(), DeepOrArgs::integer() | [term()]) -&gt; {ok, function()} | error
+</code></pre>
+<br />
+
+Returns a _reverse_ curried equivalent of the provided function, with the specified deep or params.
+
+```erlang
+
+ curry:rcurry(fun lists:keystore/4, 4).
+ % => {ok, #Fun<erl_eval.6.99386804>}
+ % => fun(A3) -> fun(A2) -> fun(A1) -> fun(A0) -> lists:keystore(A0, A1, A2, A3) end end end end.
+
+ curry:rcurry(fun lists:keystore/4, 3).
+ % => {ok, #Fun<erl_eval.12.99386804>}
+ % => fun(A3, A2) -> fun(A1) -> fun(A0) -> lists:keystore(A0, A1, A2, A3) end end end.
+
+ curry:rcurry(fun lists:keystore/4, 2).
+ % => {ok, #Fun<erl_eval.18.99386804>}
+ % => fun(A3, A2, A1) -> fun(A0) -> lists:keystore(A0, A1, A2, A3) end end.
+
+ curry:rcurry(fun lists:keystore/4, 1).
+ % => {ok, #Fun<erl_eval.4.99386804>}
+ % => fun(A3, A2, A1, A0) -> lists:keystore(A0, A1, A2, A3) end.
+
+ {ok, F} = curry:rcurry(lists, keyfind, 3, [[{tata, 1}, {toto, 2}, {titi, 3}], 1]).
+ F(toto).
+ % => {toto, 2}
+ F(tutu).
  % => false
 ```
 
@@ -90,7 +228,7 @@ Returns a _reverse_ curried equivalent of the provided function.
 ```erlang
 
  curry:rcurry(lists, keystore, 4).
- % => {ok,#Fun<erl_eval.6.99386804>}
+ % => {ok, #Fun<erl_eval.6.99386804>}
  % => fun(A3) -> fun(A2) -> fun(A1) -> fun(A0) -> lists:keystore(A0, A1, A2, A3) end end end end.
 ```
 
@@ -108,24 +246,24 @@ Returns a _reverse_ curried equivalent of the provided function, with the specif
 ```erlang
 
  curry:rcurry(lists, keystore, 4, 4).
- % => {ok,#Fun<erl_eval.6.99386804>}
+ % => {ok, #Fun<erl_eval.6.99386804>}
  % => fun(A3) -> fun(A2) -> fun(A1) -> fun(A0) -> lists:keystore(A0, A1, A2, A3) end end end end.
 
  curry:rcurry(lists, keystore, 4, 3).
- % => {ok,#Fun<erl_eval.12.99386804>}
+ % => {ok, #Fun<erl_eval.12.99386804>}
  % => fun(A3, A2) -> fun(A1) -> fun(A0) -> lists:keystore(A0, A1, A2, A3) end end end.
 
  curry:rcurry(lists, keystore, 4, 2).
- % => {ok,#Fun<erl_eval.18.99386804>}
+ % => {ok, #Fun<erl_eval.18.99386804>}
  % => fun(A3, A2, A1) -> fun(A0) -> lists:keystore(A0, A1, A2, A3) end end.
 
  curry:rcurry(lists, keystore, 4, 1).
- % => {ok,#Fun<erl_eval.4.99386804>}
+ % => {ok, #Fun<erl_eval.4.99386804>}
  % => fun(A3, A2, A1, A0) -> lists:keystore(A0, A1, A2, A3) end.
 
  {ok, F} = curry:rcurry(lists, keyfind, 3, [[{tata, 1}, {toto, 2}, {titi, 3}], 1]).
  F(toto).
- % => {toto,2}
+ % => {toto, 2}
  F(tutu).
  % => false
 ```

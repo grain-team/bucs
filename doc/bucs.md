@@ -42,7 +42,8 @@ Compare <tt>A</tt> and <tt>B</tt> as if they were strings.</td></tr><tr><td vali
 Return <tt>Default</tt> if <tt>Data</tt> is black, <tt>Data</tt> otherwise.</td></tr><tr><td valign="top"><a href="#eval-1">eval/1</a></td><td>Equivalent to <a href="#eval-2"><tt>eval(Expression, [])</tt></a>.</td></tr><tr><td valign="top"><a href="#eval-2">eval/2</a></td><td>
 Evaluate the given <tt>Expression</tt> with the given <tt>Environment</tt>.</td></tr><tr><td valign="top"><a href="#function_exist-3">function_exist/3</a></td><td>(<em>Deprecated</em>.) </td></tr><tr><td valign="top"><a href="#function_exists-3">function_exists/3</a></td><td>
 Check if the given function exist.</td></tr><tr><td valign="top"><a href="#is_kw_list-1">is_kw_list/1</a></td><td>
-Check if the given value is a keyword list.</td></tr><tr><td valign="top"><a href="#is_list_of_lists-1">is_list_of_lists/1</a></td><td>
+Check if the given value is a keyword list.</td></tr><tr><td valign="top"><a href="#is_list_of-2">is_list_of/2</a></td><td>
+Return true if all elements in the <tt>List</tt> are of type <tt>Type</tt>.</td></tr><tr><td valign="top"><a href="#is_list_of_lists-1">is_list_of_lists/1</a></td><td>
 Check if the given value is a list of lists.</td></tr><tr><td valign="top"><a href="#is_string-1">is_string/1</a></td><td>
 Check if the given value is a string.</td></tr><tr><td valign="top"><a href="#is_tuple_of-2">is_tuple_of/2</a></td><td>
 Return true if <tt>Tuple</tt> is a tuple matching the tuple <tt>Pattern</tt></td></tr><tr><td valign="top"><a href="#is_type-2">is_type/2</a></td><td>
@@ -285,6 +286,29 @@ is_kw_list(Data::term()) -&gt; true | false
 
 Check if the given value is a keyword list
 
+<a name="is_list_of-2"></a>
+
+### is_list_of/2 ###
+
+<pre><code>
+is_list_of(List::list(), Type::<a href="#type-type">type()</a> | atom()) -&gt; true | false
+</code></pre>
+<br />
+
+Return true if all elements in the `List` are of type `Type`.
+
+```
+
+ bucs:is_list_of([1, 2, 3.4], integer_or_float).
+ % => true
+
+ bucs:is_list_of(["hello", "awsome", "world"], string).
+ % => true
+
+ bucs:is_list_of(["hello", awsome, "world"], list).
+ % => false
+```
+
 <a name="is_list_of_lists-1"></a>
 
 ### is_list_of_lists/1 ###
@@ -325,6 +349,9 @@ Return true if `Tuple` is a tuple matching the tuple `Pattern`
  bucs:is_tuple_of({1, "hello", world}, {integer, string, atom}).
  % => true
 
+ bucs:is_tuple_of({1.2, "hello", world}, {integer_or_float, string, atom}).
+ % => true
+
  bucs:is_tuple_of({1, "hello", world}, {integer, string, binary}).
  % => false
 ```
@@ -334,11 +361,29 @@ Return true if `Tuple` is a tuple matching the tuple `Pattern`
 ### is_type/2 ###
 
 <pre><code>
-is_type(Data::term(), Type::<a href="#type-type">type()</a>) -&gt; true | false
+is_type(Data::term(), Type::<a href="#type-type">type()</a> | atom()) -&gt; true | false
 </code></pre>
 <br />
 
 Return true if `Data` is of type `Type`
+
+Type can by any `type()` or a `type()` composition.
+
+```erlang
+
+ is_type("hello", string). % => true
+ is_type(1.2, float). % => true
+ is_type(3, integer_or_float) % => true
+
+ is_type("hello", integer). % => false
+ is_type(1.2, string). % => false
+ is_type(hello, string_or_binary_or_list). % => false
+
+ is_type("string", string). % => true
+ is_type([1, 2, 3], string). % => false
+ is_type("string", list). % => false
+ is_type([1, 2, 3], list). % => true
+```
 
 <a name="match-2"></a>
 
