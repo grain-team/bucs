@@ -8,32 +8,72 @@
          , curry/2
          , curry/3
          , curry/4
+         , f_curry/1
+         , f_curry/2
+         , f_curry/3
+         , f_curry/4
 
          , rcurry/1
          , rcurry/2
          , rcurry/3
          , rcurry/4
+         , f_rcurry/1
+         , f_rcurry/2
+         , f_rcurry/3
+         , f_rcurry/4
         ]).
 
 % @doc
 % Performs left-to-right function composition.
+%
+% <pre lang="erlang">
+% {ok, F} = buclambda:pipe([
+%   buclambda:f_curry(fun lists:filter/2, [fun(E) -> E > 10 end]),
+%   fun erlang:length/1
+% ]).
+% F([8, 9, 10, 11, 12]).
+% % =&gt; 2
+% </pre>
 % @end
 -spec pipe(Functions :: [function() | {function(), [term()]}]) -> {ok, function()} | error.
-pipe(_Functions) ->
-  todo.
+pipe(Functions) ->
+  case lists:all(buclambda:f_rcurry(fun erlang:is_function/2, [1]), Functions) of
+    true ->
+      {ok, fun(X) -> funcalls(lists:reverse(Functions), X) end};
+    false ->
+      error
+  end.
+
+funcalls([], X) -> X;
+funcalls([Function|Rest], X) ->
+  erlang:apply(Function, [funcalls(Rest, X)]).
 
 % @doc
 % Performs right-to-left function composition.
+%
+% <pre lang="erlang">
+% {ok, F} = buclambda:compose([
+%   fun erlang:length/1,
+%   buclambda:f_curry(fun lists:filter/2, [fun(E) -> E > 10 end])
+% ]).
+% F([8, 9, 10, 11, 12]).
+% % =&gt; 2
+% </pre>
 % @end
 -spec compose(Functions :: [function()]) -> {ok, function()} | error.
-compose(_Functions) ->
-  todo.
+compose(Functions) ->
+  case lists:all(buclambda:f_rcurry(fun erlang:is_function/2, [1]), Functions) of
+    true ->
+      {ok, fun(X) -> funcalls(Functions, X) end};
+    false ->
+      error
+  end.
 
 % @doc
 % Returns a curried equivalent of the provided function.
 %
 % <pre lang="erlang">
-% curry:curry(fun lists:keystore/4).
+% buclambda:curry(fun lists:keystore/4).
 % % =&gt; {ok, #Fun&lt;erl_eval.6.99386804&gt;}
 % % =&gt; fun(A0) -&gt; fun(A1) -&gt; fun(A2) -&gt; fun(A3) -&gt; lists:keystore(A0, A1, A2, A3) end end end end.
 % </pre>
@@ -47,28 +87,33 @@ curry(Fun) when is_function(Fun) ->
       error
       % TODO: currify(Fun, Arity, Arity, lr)
   end.
+f_curry(Fun) ->
+  case curry(Fun) of
+    {ok, F} -> F;
+    Error -> error(Error)
+  end.
 
 % @doc
 % Returns a curried equivalent of the provided function, with the specified deep or params.
 %
 % <pre lang="erlang">
-% curry:curry(fun lists:keystore/4, 4).
+% buclambda:curry(fun lists:keystore/4, 4).
 % % =&gt; {ok, #Fun&lt;erl_eval.6.99386804&gt;}
 % % =&gt; fun(A0) -&gt; fun(A1) -&gt; fun(A2) -&gt; fun(A3) -&gt; lists:keystore(A0, A1, A2, A3) end end end end.
 %
-% curry:curry(fun lists:keystore/4, 3).
+% buclambda:curry(fun lists:keystore/4, 3).
 % % =&gt; {ok, #Fun&lt;erl_eval.12.99386804&gt;}
 % % =&gt; fun(A0, A1) -&gt; fun(A2) -&gt; fun(A3) -&gt; lists:keystore(A0, A1, A2, A3) end end end.
 %
-% curry:curry(fun lists:keystore/4, 2).
+% buclambda:curry(fun lists:keystore/4, 2).
 % % =&gt;{ok, #Fun&lt;erl_eval.18.99386804&gt;}
 % % =&gt; fun(A0, A1, A2) -&gt; fun(A3) -&gt; lists:keystore(A0, A1, A2, A3) end end.
 %
-% curry:curry(fun lists:keystore/4, 1).
+% buclambda:curry(fun lists:keystore/4, 1).
 % % =&gt; {ok, #Fun&lt;erl_eval.4.99386804&gt;}
 % % =&gt; fun(A0, A1, A2, A3) -&gt; lists:keystore(A0, A1, A2, A3) end.
 %
-% {ok, F} = curry:curry(fun lists:keyfind/3, [toto, 1]).
+% {ok, F} = buclambda:curry(fun lists:keyfind/3, [toto, 1]).
 % F([{tata, 1}, {toto, 2}, {titi, 3}]).
 % % =&gt; {toto, 2}
 % F([{tata, 1}, {tutu, 2}, {titi, 3}]).
@@ -92,12 +137,17 @@ curry(Fun, Deep) when is_integer(Deep) orelse is_list(Deep) ->
       % TODO:     end
       % TODO: end
   end.
+f_curry(Fun, Deep) ->
+  case curry(Fun, Deep) of
+    {ok, F} -> F;
+    Error -> error(Error)
+  end.
 
 % @doc
 % Returns a <i>reverse</i> curried equivalent of the provided function.
 %
 % <pre lang="erlang">
-% curry:rcurry(fun lists:keystore/4).
+% buclambda:rcurry(fun lists:keystore/4).
 % % =&gt; {ok, #Fun&lt;erl_eval.6.99386804&gt;}
 % % =&gt; fun(A3) -&gt; fun(A2) -&gt; fun(A1) -&gt; fun(A0) -&gt; lists:keystore(A0, A1, A2, A3) end end end end.
 % </pre>
@@ -110,28 +160,33 @@ rcurry(Fun) when is_function(Fun) ->
       error
       % TODO: currify(Fun, Arity, Arity, rl)
   end.
+f_rcurry(Fun) ->
+  case rcurry(Fun) of
+    {ok, F} -> F;
+    Error -> error(Error)
+  end.
 
 % @doc
 % Returns a <i>reverse</i> curried equivalent of the provided function, with the specified deep or params.
 %
 % <pre lang="erlang">
-% curry:rcurry(fun lists:keystore/4, 4).
+% buclambda:rcurry(fun lists:keystore/4, 4).
 % % =&gt; {ok, #Fun&lt;erl_eval.6.99386804&gt;}
 % % =&gt; fun(A3) -&gt; fun(A2) -&gt; fun(A1) -&gt; fun(A0) -&gt; lists:keystore(A0, A1, A2, A3) end end end end.
 %
-% curry:rcurry(fun lists:keystore/4, 3).
+% buclambda:rcurry(fun lists:keystore/4, 3).
 % % =&gt; {ok, #Fun&lt;erl_eval.12.99386804&gt;}
 % % =&gt; fun(A3, A2) -&gt; fun(A1) -&gt; fun(A0) -&gt; lists:keystore(A0, A1, A2, A3) end end end.
 %
-% curry:rcurry(fun lists:keystore/4, 2).
+% buclambda:rcurry(fun lists:keystore/4, 2).
 % % =&gt; {ok, #Fun&lt;erl_eval.18.99386804&gt;}
 % % =&gt; fun(A3, A2, A1) -&gt; fun(A0) -&gt; lists:keystore(A0, A1, A2, A3) end end.
 %
-% curry:rcurry(fun lists:keystore/4, 1).
+% buclambda:rcurry(fun lists:keystore/4, 1).
 % % =&gt; {ok, #Fun&lt;erl_eval.4.99386804&gt;}
 % % =&gt; fun(A3, A2, A1, A0) -&gt; lists:keystore(A0, A1, A2, A3) end.
 %
-% {ok, F} = curry:rcurry(lists, keyfind, 3, [[{tata, 1}, {toto, 2}, {titi, 3}], 1]).
+% {ok, F} = buclambda:rcurry(lists, keyfind, 3, [[{tata, 1}, {toto, 2}, {titi, 3}], 1]).
 % F(toto).
 % % =&gt; {toto, 2}
 % F(tutu).
@@ -155,12 +210,17 @@ rcurry(Fun, Deep) when is_integer(Deep) orelse is_list(Deep) ->
       % TODO:     end
       % TODO: end
   end.
+f_rcurry(Fun, Deep) ->
+  case rcurry(Fun, Deep) of
+    {ok, F} -> F;
+    Error -> error(Error)
+  end.
 
 % @doc
 % Returns a curried equivalent of the provided function.
 %
 % <pre lang="erlang">
-% curry:curry(lists, keystore, 4).
+% buclambda:curry(lists, keystore, 4).
 % % =&gt; {ok, #Fun&lt;erl_eval.6.99386804&gt;}
 % % =&gt; fun(A0) -&gt; fun(A1) -&gt; fun(A2) -&gt; fun(A3) -&gt; lists:keystore(A0, A1, A2, A3) end end end end.
 % </pre>
@@ -169,28 +229,33 @@ rcurry(Fun, Deep) when is_integer(Deep) orelse is_list(Deep) ->
   {ok, function()} | error.
 curry(Module, Function, Arity) ->
   currify({Module, Function}, Arity, Arity, lr).
+f_curry(Module, Function, Arity) ->
+  case curry(Module, Function, Arity) of
+    {ok, F} -> F;
+    Error -> error(Error)
+  end.
 
 % @doc
 % Returns a curried equivalent of the provided function, with the specified deep or params.
 %
 % <pre lang="erlang">
-% curry:curry(lists, keystore, 4, 4).
+% buclambda:curry(lists, keystore, 4, 4).
 % % =&gt; {ok, #Fun&lt;erl_eval.6.99386804&gt;}
 % % =&gt; fun(A0) -&gt; fun(A1) -&gt; fun(A2) -&gt; fun(A3) -&gt; lists:keystore(A0, A1, A2, A3) end end end end.
 %
-% curry:curry(lists, keystore, 4, 3).
+% buclambda:curry(lists, keystore, 4, 3).
 % % =&gt; {ok, #Fun&lt;erl_eval.12.99386804&gt;}
 % % =&gt; fun(A0, A1) -&gt; fun(A2) -&gt; fun(A3) -&gt; lists:keystore(A0, A1, A2, A3) end end end.
 %
-% curry:curry(lists, keystore, 4, 2).
+% buclambda:curry(lists, keystore, 4, 2).
 % % =&gt;{ok, #Fun&lt;erl_eval.18.99386804&gt;}
 % % =&gt; fun(A0, A1, A2) -&gt; fun(A3) -&gt; lists:keystore(A0, A1, A2, A3) end end.
 %
-% curry:curry(lists, keystore, 4, 1).
+% buclambda:curry(lists, keystore, 4, 1).
 % % =&gt; {ok, #Fun&lt;erl_eval.4.99386804&gt;}
 % % =&gt; fun(A0, A1, A2, A3) -&gt; lists:keystore(A0, A1, A2, A3) end.
 %
-% {ok, F} = curry:curry(lists, keyfind, 3, [toto, 1]).
+% {ok, F} = buclambda:curry(lists, keyfind, 3, [toto, 1]).
 % F([{tata, 1}, {toto, 2}, {titi, 3}]).
 % % =&gt; {toto, 2}
 % F([{tata, 1}, {tutu, 2}, {titi, 3}]).
@@ -206,12 +271,17 @@ curry(Module, Function, Arity, Args) when is_list(Args) ->
     {ok, Fun} -> {ok, erlang:apply(Fun, Args)};
     Other -> Other
   end.
+f_curry(Module, Function, Arity, Deep) ->
+  case curry(Module, Function, Arity, Deep) of
+    {ok, F} -> F;
+    Error -> error(Error)
+  end.
 
 % @doc
 % Returns a <i>reverse</i> curried equivalent of the provided function.
 %
 % <pre lang="erlang">
-% curry:rcurry(lists, keystore, 4).
+% buclambda:rcurry(lists, keystore, 4).
 % % =&gt; {ok, #Fun&lt;erl_eval.6.99386804&gt;}
 % % =&gt; fun(A3) -&gt; fun(A2) -&gt; fun(A1) -&gt; fun(A0) -&gt; lists:keystore(A0, A1, A2, A3) end end end end.
 % </pre>
@@ -220,28 +290,33 @@ curry(Module, Function, Arity, Args) when is_list(Args) ->
   {ok, function()} | error.
 rcurry(Module, Function, Arity) ->
   currify({Module, Function}, Arity, Arity, rl).
+f_rcurry(Module, Function, Arity) ->
+  case rcurry(Module, Function, Arity) of
+    {ok, F} -> F;
+    Error -> error(Error)
+  end.
 
 % @doc
 % Returns a <i>reverse</i> curried equivalent of the provided function, with the specified deep or params.
 %
 % <pre lang="erlang">
-% curry:rcurry(lists, keystore, 4, 4).
+% buclambda:rcurry(lists, keystore, 4, 4).
 % % =&gt; {ok, #Fun&lt;erl_eval.6.99386804&gt;}
 % % =&gt; fun(A3) -&gt; fun(A2) -&gt; fun(A1) -&gt; fun(A0) -&gt; lists:keystore(A0, A1, A2, A3) end end end end.
 %
-% curry:rcurry(lists, keystore, 4, 3).
+% buclambda:rcurry(lists, keystore, 4, 3).
 % % =&gt; {ok, #Fun&lt;erl_eval.12.99386804&gt;}
 % % =&gt; fun(A3, A2) -&gt; fun(A1) -&gt; fun(A0) -&gt; lists:keystore(A0, A1, A2, A3) end end end.
 %
-% curry:rcurry(lists, keystore, 4, 2).
+% buclambda:rcurry(lists, keystore, 4, 2).
 % % =&gt; {ok, #Fun&lt;erl_eval.18.99386804&gt;}
 % % =&gt; fun(A3, A2, A1) -&gt; fun(A0) -&gt; lists:keystore(A0, A1, A2, A3) end end.
 %
-% curry:rcurry(lists, keystore, 4, 1).
+% buclambda:rcurry(lists, keystore, 4, 1).
 % % =&gt; {ok, #Fun&lt;erl_eval.4.99386804&gt;}
 % % =&gt; fun(A3, A2, A1, A0) -&gt; lists:keystore(A0, A1, A2, A3) end.
 %
-% {ok, F} = curry:rcurry(lists, keyfind, 3, [[{tata, 1}, {toto, 2}, {titi, 3}], 1]).
+% {ok, F} = buclambda:rcurry(lists, keyfind, 3, [[{tata, 1}, {toto, 2}, {titi, 3}], 1]).
 % F(toto).
 % % =&gt; {toto, 2}
 % F(tutu).
@@ -256,6 +331,11 @@ rcurry(Module, Function, Arity, Args) when is_list(Args) ->
   case rcurry(Module, Function, Arity, Arity - length(Args) + 1) of
     {ok, Fun} -> {ok, erlang:apply(Fun, Args)};
     Other -> Other
+  end.
+f_rcurry(Module, Function, Arity, Deep) ->
+  case rcurry(Module, Function, Arity, Deep) of
+    {ok, F} -> F;
+    Error -> error(Error)
   end.
 
 % -----------------------------------------------------------------------------

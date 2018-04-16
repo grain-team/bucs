@@ -1,6 +1,6 @@
 # File: Bucs.File.ex
 # This file was generated from bucfile.beam
-# Using rebar3_elixir (https://github.com/botsunit/rebar3_elixir)
+# Using rebar3_elixir (https://github.com/G-Corp/rebar3_elixir)
 # MODIFY IT AT YOUR OWN RISK AND ONLY IF YOU KNOW WHAT YOU ARE DOING!
 defmodule Bucs.File do
   def unquote(:"expand_path")(arg1) do

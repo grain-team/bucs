@@ -1,6 +1,6 @@
 # File: Bucs.String.ex
 # This file was generated from bucstring.beam
-# Using rebar3_elixir (https://github.com/botsunit/rebar3_elixir)
+# Using rebar3_elixir (https://github.com/G-Corp/rebar3_elixir)
 # MODIFY IT AT YOUR OWN RISK AND ONLY IF YOU KNOW WHAT YOU ARE DOING!
 defmodule Bucs.String do
   def unquote(:"sub")(arg1, arg2, arg3) do
