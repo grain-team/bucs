@@ -87,6 +87,10 @@ curry(Fun) when is_function(Fun) ->
       error
       % TODO: currify(Fun, Arity, Arity, lr)
   end.
+% @doc
+% Same as <tt>buclambda:curry/1</tt> but fails with an exception on error
+% @end
+-spec f_curry(Fun :: function()) -> function().
 f_curry(Fun) ->
   case curry(Fun) of
     {ok, F} -> F;
@@ -137,6 +141,11 @@ curry(Fun, Deep) when is_integer(Deep) orelse is_list(Deep) ->
       % TODO:     end
       % TODO: end
   end.
+
+% @doc
+% Same as <tt>buclambda:curry/2</tt> but fails with an exception on error
+% @end
+-spec f_curry(Fun :: function(), DeepOrArgs :: integer() | [term()]) -> function().
 f_curry(Fun, Deep) ->
   case curry(Fun, Deep) of
     {ok, F} -> F;
@@ -160,6 +169,11 @@ rcurry(Fun) when is_function(Fun) ->
       error
       % TODO: currify(Fun, Arity, Arity, rl)
   end.
+
+% @doc
+% Same as <tt>buclambda:r_curry/1</tt> but fails with an exception on error
+% @end
+-spec f_rcurry(Fun :: function()) -> function().
 f_rcurry(Fun) ->
   case rcurry(Fun) of
     {ok, F} -> F;
@@ -210,6 +224,11 @@ rcurry(Fun, Deep) when is_integer(Deep) orelse is_list(Deep) ->
       % TODO:     end
       % TODO: end
   end.
+
+% @doc
+% Same as <tt>buclambda:rcurry/2</tt> but fails with an exception on error
+% @end
+-spec f_rcurry(Fun :: function(), DeepOrArgs :: integer() | [term()]) -> function().
 f_rcurry(Fun, Deep) ->
   case rcurry(Fun, Deep) of
     {ok, F} -> F;
@@ -229,6 +248,11 @@ f_rcurry(Fun, Deep) ->
   {ok, function()} | error.
 curry(Module, Function, Arity) ->
   currify({Module, Function}, Arity, Arity, lr).
+
+% @doc
+% Same as <tt>buclambda:curry/3</tt> but fails with an exception on error
+% @end
+-spec f_curry(Module :: module(), Function :: atom(), Arity :: integer()) -> function().
 f_curry(Module, Function, Arity) ->
   case curry(Module, Function, Arity) of
     {ok, F} -> F;
@@ -271,6 +295,12 @@ curry(Module, Function, Arity, Args) when is_list(Args) ->
     {ok, Fun} -> {ok, erlang:apply(Fun, Args)};
     Other -> Other
   end.
+
+% @doc
+% Same as <tt>buclambda:curry/4</tt> but fails with an exception on error
+% @end
+-spec f_curry(Module :: module(), Function :: atom(), Arity :: integer(), DeepOrArgs :: integer() | [term()]) ->
+  function().
 f_curry(Module, Function, Arity, Deep) ->
   case curry(Module, Function, Arity, Deep) of
     {ok, F} -> F;
@@ -290,6 +320,11 @@ f_curry(Module, Function, Arity, Deep) ->
   {ok, function()} | error.
 rcurry(Module, Function, Arity) ->
   currify({Module, Function}, Arity, Arity, rl).
+
+% @doc
+% Same as <tt>buclambda:rcurry/3</tt> but fails with an exception on error
+% @end
+-spec f_rcurry(Module :: module(), Function :: atom(), Arity :: integer()) -> function().
 f_rcurry(Module, Function, Arity) ->
   case rcurry(Module, Function, Arity) of
     {ok, F} -> F;
@@ -332,6 +367,12 @@ rcurry(Module, Function, Arity, Args) when is_list(Args) ->
     {ok, Fun} -> {ok, erlang:apply(Fun, Args)};
     Other -> Other
   end.
+
+% @doc
+% Same as <tt>buclambda:rcurry/4</tt> but fails with an exception on error
+% @end
+-spec f_rcurry(Module :: module(), Function :: atom(), Arity :: integer(), DeepOrArgs :: integer() | [term()]) ->
+  function().
 f_rcurry(Module, Function, Arity, Deep) ->
   case rcurry(Module, Function, Arity, Deep) of
     {ok, F} -> F;

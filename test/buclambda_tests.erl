@@ -28,5 +28,25 @@ buclambda_test_() ->
     % TODO:     ?assertEqual(10, F(1)),
     % TODO:     ?assertEqual(20, F(2)),
     % TODO:     ?assertEqual(30, F(3))
+    end,
+    fun() ->
+        {ok, F} = buclambda:pipe(
+                    [
+                     buclambda:f_curry(fun lists:filter/2, [fun(E) -> E > 10 end]),
+                     fun erlang:length/1
+                    ]
+                   ),
+        ?assertEqual(0, F([1, 2, 3, 4, 5])),
+        ?assertEqual(2, F([8, 9, 10, 11, 12]))
+    end,
+    fun() ->
+        {ok, F} = buclambda:compose(
+                    [
+                     fun erlang:length/1,
+                     buclambda:f_curry(fun lists:filter/2, [fun(E) -> E > 10 end])
+                    ]
+                   ),
+        ?assertEqual(0, F([1, 2, 3, 4, 5])),
+        ?assertEqual(2, F([8, 9, 10, 11, 12]))
     end
    ]}.

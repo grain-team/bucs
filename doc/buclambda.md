@@ -14,7 +14,15 @@ Performs right-to-left function composition.</td></tr><tr><td valign="top"><a hr
 Returns a curried equivalent of the provided function.</td></tr><tr><td valign="top"><a href="#curry-2">curry/2</a></td><td> 
 Returns a curried equivalent of the provided function, with the specified deep or params.</td></tr><tr><td valign="top"><a href="#curry-3">curry/3</a></td><td> 
 Returns a curried equivalent of the provided function.</td></tr><tr><td valign="top"><a href="#curry-4">curry/4</a></td><td> 
-Returns a curried equivalent of the provided function, with the specified deep or params.</td></tr><tr><td valign="top"><a href="#f_curry-1">f_curry/1</a></td><td></td></tr><tr><td valign="top"><a href="#f_curry-2">f_curry/2</a></td><td></td></tr><tr><td valign="top"><a href="#f_curry-3">f_curry/3</a></td><td></td></tr><tr><td valign="top"><a href="#f_curry-4">f_curry/4</a></td><td></td></tr><tr><td valign="top"><a href="#f_rcurry-1">f_rcurry/1</a></td><td></td></tr><tr><td valign="top"><a href="#f_rcurry-2">f_rcurry/2</a></td><td></td></tr><tr><td valign="top"><a href="#f_rcurry-3">f_rcurry/3</a></td><td></td></tr><tr><td valign="top"><a href="#f_rcurry-4">f_rcurry/4</a></td><td></td></tr><tr><td valign="top"><a href="#pipe-1">pipe/1</a></td><td> 
+Returns a curried equivalent of the provided function, with the specified deep or params.</td></tr><tr><td valign="top"><a href="#f_curry-1">f_curry/1</a></td><td>
+Same as <tt>buclambda:curry/1</tt> but fails with an exception on error.</td></tr><tr><td valign="top"><a href="#f_curry-2">f_curry/2</a></td><td>
+Same as <tt>buclambda:curry/2</tt> but fails with an exception on error.</td></tr><tr><td valign="top"><a href="#f_curry-3">f_curry/3</a></td><td>
+Same as <tt>buclambda:curry/3</tt> but fails with an exception on error.</td></tr><tr><td valign="top"><a href="#f_curry-4">f_curry/4</a></td><td>
+Same as <tt>buclambda:curry/4</tt> but fails with an exception on error.</td></tr><tr><td valign="top"><a href="#f_rcurry-1">f_rcurry/1</a></td><td>
+Same as <tt>buclambda:r_curry/1</tt> but fails with an exception on error.</td></tr><tr><td valign="top"><a href="#f_rcurry-2">f_rcurry/2</a></td><td>
+Same as <tt>buclambda:rcurry/2</tt> but fails with an exception on error.</td></tr><tr><td valign="top"><a href="#f_rcurry-3">f_rcurry/3</a></td><td>
+Same as <tt>buclambda:rcurry/3</tt> but fails with an exception on error.</td></tr><tr><td valign="top"><a href="#f_rcurry-4">f_rcurry/4</a></td><td>
+Same as <tt>buclambda:rcurry/4</tt> but fails with an exception on error.</td></tr><tr><td valign="top"><a href="#pipe-1">pipe/1</a></td><td> 
 Performs left-to-right function composition.</td></tr><tr><td valign="top"><a href="#rcurry-1">rcurry/1</a></td><td>
 Returns a <i>reverse</i> curried equivalent of the provided function.</td></tr><tr><td valign="top"><a href="#rcurry-2">rcurry/2</a></td><td>
 Returns a <i>reverse</i> curried equivalent of the provided function, with the specified deep or params.</td></tr><tr><td valign="top"><a href="#rcurry-3">rcurry/3</a></td><td>
@@ -164,49 +172,89 @@ Returns a curried equivalent of the provided function, with the specified deep o
 
 ### f_curry/1 ###
 
-`f_curry(Fun) -> any()`
+<pre><code>
+f_curry(Fun::function()) -&gt; function()
+</code></pre>
+<br />
+
+Same as `buclambda:curry/1` but fails with an exception on error
 
 <a name="f_curry-2"></a>
 
 ### f_curry/2 ###
 
-`f_curry(Fun, Deep) -> any()`
+<pre><code>
+f_curry(Fun::function(), DeepOrArgs::integer() | [term()]) -&gt; function()
+</code></pre>
+<br />
+
+Same as `buclambda:curry/2` but fails with an exception on error
 
 <a name="f_curry-3"></a>
 
 ### f_curry/3 ###
 
-`f_curry(Module, Function, Arity) -> any()`
+<pre><code>
+f_curry(Module::module(), Function::atom(), Arity::integer()) -&gt; function()
+</code></pre>
+<br />
+
+Same as `buclambda:curry/3` but fails with an exception on error
 
 <a name="f_curry-4"></a>
 
 ### f_curry/4 ###
 
-`f_curry(Module, Function, Arity, Deep) -> any()`
+<pre><code>
+f_curry(Module::module(), Function::atom(), Arity::integer(), DeepOrArgs::integer() | [term()]) -&gt; function()
+</code></pre>
+<br />
+
+Same as `buclambda:curry/4` but fails with an exception on error
 
 <a name="f_rcurry-1"></a>
 
 ### f_rcurry/1 ###
 
-`f_rcurry(Fun) -> any()`
+<pre><code>
+f_rcurry(Fun::function()) -&gt; function()
+</code></pre>
+<br />
+
+Same as `buclambda:r_curry/1` but fails with an exception on error
 
 <a name="f_rcurry-2"></a>
 
 ### f_rcurry/2 ###
 
-`f_rcurry(Fun, Deep) -> any()`
+<pre><code>
+f_rcurry(Fun::function(), DeepOrArgs::integer() | [term()]) -&gt; function()
+</code></pre>
+<br />
+
+Same as `buclambda:rcurry/2` but fails with an exception on error
 
 <a name="f_rcurry-3"></a>
 
 ### f_rcurry/3 ###
 
-`f_rcurry(Module, Function, Arity) -> any()`
+<pre><code>
+f_rcurry(Module::module(), Function::atom(), Arity::integer()) -&gt; function()
+</code></pre>
+<br />
+
+Same as `buclambda:rcurry/3` but fails with an exception on error
 
 <a name="f_rcurry-4"></a>
 
 ### f_rcurry/4 ###
 
-`f_rcurry(Module, Function, Arity, Deep) -> any()`
+<pre><code>
+f_rcurry(Module::module(), Function::atom(), Arity::integer(), DeepOrArgs::integer() | [term()]) -&gt; function()
+</code></pre>
+<br />
+
+Same as `buclambda:rcurry/4` but fails with an exception on error
 
 <a name="pipe-1"></a>
 
