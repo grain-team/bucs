@@ -55,7 +55,7 @@ run(Cmd, Options) when is_list(Options) ->
       Cgroup = buclists:keyfind(cgroup, 1, Options, undefined),
       Cgexec = buclists:keyfind(cgexec, 1, Options, "cgexec"),
       OnData = buclists:keyfind(on_data, 1, Options, undefined),
-      Port = erlang:open_port({spawn, format_command(Cmd, Cgexec, Cgroup)}, run_options(Options, [exit_status, stderr_to_stdout])),
+      Port = erlang:open_port({spawn, format_command(Cmd, Cgexec, Cgroup)}, run_options(Options, [exit_status, stderr_to_stdout, hide])),
       loop(Port, [], Timeout, StdoutOnError, DisplayStdout, OnData);
     _ ->
       run_all(Cmd, Options, [])
