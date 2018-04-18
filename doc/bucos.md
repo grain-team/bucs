@@ -33,6 +33,10 @@ Execute the given shell command, waiting at most for a given timeout before retu
 <li><tt>display_stdout</tt> : Display stdout.</li>
 <li><tt>{timeout, integer() | infinity}</tt> : To set a maximum time to wait for, before returning with a <tt>{error, timeout}</tt> result.</li>
 <li><tt>{return, list|combined, all|last|integer()|[integer()]}</tt> : To specify output collection.</li>
+<li><tt>{cgroup, string() | binary()}</tt> : Run the command in given control groups.</li>
+<li><tt>{cgexec, string() | binary()}</tt> : <tt>cgexec</tt> path.</li>
+<li><tt>{on_data, {function((Data::string(), State::term()) -> NewState::term()), State::term()} | function((Data::string()) -> ok)</tt> :
+Call the given function on each new data with optional metadatas.</li>
 <li><tt>{cd, string() | binary()}</tt> : Change directory before run command.</li>
 <li><tt>{env, [{string(), string() | false}]}</tt> :  The environment of the started process is extended using the environment specifications.</li>
 </ul>
@@ -98,6 +102,13 @@ Execute the given shell command, waiting at most for a given timeout before retu
 * `{timeout, integer() | infinity}` : To set a maximum time to wait for, before returning with a `{error, timeout}` result.
 
 * `{return, list|combined, all|last|integer()|[integer()]}` : To specify output collection.
+
+* `{cgroup, string() | binary()}` : Run the command in given control groups.
+
+* `{cgexec, string() | binary()}` : `cgexec` path.
+
+* `{on_data, {function((Data::string(), State::term()) -> NewState::term()), State::term()} | function((Data::string()) -> ok)` :
+Call the given function on each new data with optional metadatas.
 
 * `{cd, string() | binary()}` : Change directory before run command.
 

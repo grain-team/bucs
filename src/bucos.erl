@@ -8,6 +8,7 @@
         ]).
 -define(TIMEOUT, infinity).
 -define(DEFAULT_RETURN_TYPE, combined).
+-define(CGEXEC, "~ts -g ~ts ~ts").
 
 -type options() :: {timeout, integer()}
 | stdout_on_error
@@ -29,6 +30,10 @@ run(Cmd) ->
 % <li><tt>display_stdout</tt> : Display stdout.</li>
 % <li><tt>{timeout, integer() | infinity}</tt> : To set a maximum time to wait for, before returning with a <tt>{error, timeout}</tt> result.</li>
 % <li><tt>{return, list|combined, all|last|integer()|[integer()]}</tt> : To specify output collection.</li>
+% <li><tt>{cgroup, string() | binary()}</tt> : Run the command in given control groups.</li>
+% <li><tt>{cgexec, string() | binary()}</tt> : <tt>cgexec</tt> path.</li>
+% <li><tt>{on_data, {function((Data::string(), State::term()) -> NewState::term()), State::term()} | function((Data::string()) -> ok)</tt> :
+% Call the given function on each new data with optional metadatas.</li>
 % <li><tt>{cd, string() | binary()}</tt> : Change directory before run command.</li>
 % <li><tt>{env, [{string(), string() | false}]}</tt> :  The environment of the started process is extended using the environment specifications.</li>
 % </ul>
@@ -47,8 +52,11 @@ run(Cmd, Options) when is_list(Options) ->
       Timeout = buclists:keyfind(timeout, 1, Options, ?TIMEOUT),
       StdoutOnError = lists:member(stdout_on_error, Options),
       DisplayStdout = lists:member(display_stdout, Options),
-      Port = erlang:open_port({spawn, format_command(Cmd)}, run_options(Options, [exit_status, stderr_to_stdout])),
-      loop(Port, [], Timeout, StdoutOnError, DisplayStdout);
+      Cgroup = buclists:keyfind(cgroup, 1, Options, undefined),
+      Cgexec = buclists:keyfind(cgexec, 1, Options, "cgexec"),
+      OnData = buclists:keyfind(on_data, 1, Options, undefined),
+      Port = erlang:open_port({spawn, format_command(Cmd, Cgexec, Cgroup)}, run_options(Options, [exit_status, stderr_to_stdout])),
+      loop(Port, [], Timeout, StdoutOnError, DisplayStdout, OnData);
     _ ->
       run_all(Cmd, Options, [])
   end;
@@ -64,14 +72,16 @@ run_options([ENV = {env, _}|Options], Acc) ->
 run_options([_|Options], Acc) ->
   run_options(Options, Acc).
 
-loop(Port, Data, Timeout, StdoutOnError, DisplayStdout) ->
+loop(Port, Data, Timeout, StdoutOnError, DisplayStdout, OnData) ->
   receive
     {Port, {data, NewData}} ->
+      display_stdout(DisplayStdout, NewData),
+      NewOnData = on_data(OnData, NewData),
       if
         DisplayStdout -> io:format("~s", [NewData]);
         true -> ok
       end,
-      loop(Port, Data ++ NewData, Timeout, StdoutOnError, DisplayStdout);
+      loop(Port, Data ++ NewData, Timeout, StdoutOnError, DisplayStdout, NewOnData);
     {Port, {exit_status, 0}} -> {ok, Data};
     {Port, {exit_status, S}} ->
       if
@@ -82,6 +92,18 @@ loop(Port, Data, Timeout, StdoutOnError, DisplayStdout) ->
     Timeout ->
       {error, timeout}
   end.
+
+display_stdout(true, NewData) -> io:format("~ts", [NewData]);
+display_stdout(_, _NewData) -> ok.
+
+on_data({Function, State}, NewData) when is_function(Function, 2) ->
+  NewState = erlang:apply(Function, [NewData, State]),
+  {Function, NewState};
+on_data(Function, NewData) when is_function(Function, 1) ->
+  erlang:apply(Function, [NewData]),
+  Function;
+on_data(Function, _NewData) ->
+  Function.
 
 run_all([], Options, Acc) ->
   Results = lists:reverse(Acc),
@@ -116,10 +138,15 @@ results(combined, List) ->
   lists:flatten(List);
 results(_, List) -> List.
 
-format_command({Cmd, Args}) when is_list(Args) ->
-  bucs:to_string(lists:flatten(io_lib:format(Cmd, Args)));
-format_command(Cmd) ->
-  bucs:to_string(Cmd).
+format_command({Cmd, Args}, Cgexec, Cgroup) when is_list(Args) ->
+  run_in_cgroup(bucs:to_string(lists:flatten(io_lib:format(Cmd, Args))), Cgexec, Cgroup);
+format_command(Cmd, Cgexec, Cgroup) ->
+  run_in_cgroup(bucs:to_string(Cmd), Cgexec, Cgroup).
+
+run_in_cgroup(Cmd, _Cgexec, undefined) ->
+  Cmd;
+run_in_cgroup(Cmd, Cgexec, Cgroup) ->
+  lists:flatten(io_lib:format(?CGEXEC, [Cgexec, Cgroup, Cmd])).
 
 %% @doc
 %% Execute the given function function in the given path.
@@ -150,4 +177,3 @@ in(Path, Fun, Args) when is_function(Fun, length(Args)) ->
 %% @equiv in(Path, Fun, [])
 in(Path, Fun) when is_function(Fun) ->
   in(Path, Fun, []).
-
