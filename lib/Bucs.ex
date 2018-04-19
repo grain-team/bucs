@@ -69,6 +69,12 @@ defmodule Bucs do
   def unquote(:"is_list_of_lists")(arg1) do
     :erlang.apply(:"bucs", :"is_list_of_lists", [arg1])
   end
+  def unquote(:"is_list_of_printables")(arg1) do
+    :erlang.apply(:"bucs", :"is_list_of_printables", [arg1])
+  end
+  def unquote(:"is_printable")(arg1) do
+    :erlang.apply(:"bucs", :"is_printable", [arg1])
+  end
   def unquote(:"match")(arg1, arg2) do
     :erlang.apply(:"bucs", :"match", [arg1, arg2])
   end

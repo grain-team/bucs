@@ -44,7 +44,9 @@ Evaluate the given <tt>Expression</tt> with the given <tt>Environment</tt>.</td>
 Check if the given function exist.</td></tr><tr><td valign="top"><a href="#is_kw_list-1">is_kw_list/1</a></td><td>
 Check if the given value is a keyword list.</td></tr><tr><td valign="top"><a href="#is_list_of-2">is_list_of/2</a></td><td>
 Return true if all elements in the <tt>List</tt> are of type <tt>Type</tt>.</td></tr><tr><td valign="top"><a href="#is_list_of_lists-1">is_list_of_lists/1</a></td><td>
-Check if the given value is a list of lists.</td></tr><tr><td valign="top"><a href="#is_string-1">is_string/1</a></td><td>
+Check if the given value is a list of lists.</td></tr><tr><td valign="top"><a href="#is_list_of_printables-1">is_list_of_printables/1</a></td><td>
+Return true if the given value is a liste a pritable strings or binaries.</td></tr><tr><td valign="top"><a href="#is_printable-1">is_printable/1</a></td><td>
+Return true if the given value is a printable string or binary.</td></tr><tr><td valign="top"><a href="#is_string-1">is_string/1</a></td><td>
 Check if the given value is a string.</td></tr><tr><td valign="top"><a href="#is_tuple_of-2">is_tuple_of/2</a></td><td>
 Return true if <tt>Tuple</tt> is a tuple matching the tuple <tt>Pattern</tt></td></tr><tr><td valign="top"><a href="#is_type-2">is_type/2</a></td><td>
 Return true if <tt>Data</tt> is of type <tt>Type</tt></td></tr><tr><td valign="top"><a href="#match-2">match/2</a></td><td>
@@ -319,6 +321,28 @@ is_list_of_lists(Data::term()) -&gt; true | false
 <br />
 
 Check if the given value is a list of lists
+
+<a name="is_list_of_printables-1"></a>
+
+### is_list_of_printables/1 ###
+
+<pre><code>
+is_list_of_printables(Data::list()) -&gt; true | false
+</code></pre>
+<br />
+
+Return true if the given value is a liste a pritable strings or binaries
+
+<a name="is_printable-1"></a>
+
+### is_printable/1 ###
+
+<pre><code>
+is_printable(Data::term()) -&gt; true | false
+</code></pre>
+<br />
+
+Return true if the given value is a printable string or binary
 
 <a name="is_string-1"></a>
 

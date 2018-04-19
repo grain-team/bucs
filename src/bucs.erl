@@ -24,6 +24,8 @@
          apply/3,
          apply/2,
          is_string/1,
+         is_printable/1,
+         is_list_of_printables/1,
          is_list_of_lists/1,
          is_kw_list/1,
          is_tuple_of/2,
@@ -444,9 +446,25 @@ is_kw_list(_) -> false.
 -spec is_list_of_lists(Data :: term()) -> true | false.
 is_list_of_lists(L) ->
   is_list(L) andalso
-  lists:all(fun(E) ->
-                is_list(E)
-            end, L).
+  lists:all(fun erlang:is_list/1, L).
+
+% @doc
+% Return true if the given value is a liste a pritable strings or binaries
+% @end
+-spec is_list_of_printables(Data :: list()) -> true | false.
+is_list_of_printables(L) ->
+  is_list(L) andalso
+  lists:all(fun is_printable/1, L).
+
+% @doc
+% Return true if the given value is a printable string or binary
+% @end
+-spec is_printable(Data :: term()) -> true | false.
+is_printable(V) when is_list(V) ->
+  is_string(V);
+is_printable(V) when is_binary(V) ->
+  is_string(to_list(V));
+is_printable(_V) -> false.
 
 % @doc
 % Return true if <tt>A</tt> match <tt>B</tt>. false otherwise.
