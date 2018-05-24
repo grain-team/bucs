@@ -8,7 +8,7 @@ defmodule Bucs.Mixfile do
   def project do
     [
       app: :bucs,
-      version: "1.0.16",
+      version: "1.0.17",
       elixir: "~> 1.2",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
