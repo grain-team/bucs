@@ -7,9 +7,16 @@
          , is_float/1
          , are_integers/1
          , are_floats/1
-         , to_hexstr/1
-         , from_hexstr/1
+         , to_hex/1
+         , to_hex/2
+         , from_hex/1
          , rand_bits/1
+        ]).
+
+% Deprecated
+-export([
+         to_hexstr/1
+         , from_hexstr/1
         ]).
 
 %% @doc
@@ -21,20 +28,42 @@ rand_bits(Bits) when erlang:is_integer(Bits), Bits >= 0->
   <<Result:Bits/bits, _/bits>> = crypto:strong_rand_bytes(Bytes),
   Result.
 
+%% @deprecated use bucbinary:to_hex/1
+-spec to_hexstr(Bin :: binary()) -> list().
+to_hexstr(Bin) when is_binary(Bin) ->
+  to_hex(Bin).
+
 %% @doc
 %% Convert a binary to and Hex string
 %% @end
--spec to_hexstr(Bin :: binary()) -> list().
-to_hexstr(Bin) when is_binary(Bin) ->
-  lists:flatten([io_lib:format("~2.16.0B", [X]) ||
-    X <- binary_to_list(Bin)]).
+-spec to_hex(Bin :: binary()) -> string().
+to_hex(Bin) when is_binary(Bin) ->
+  to_hex(Bin, string).
 
 %% @doc
-%% Convert a Hex string to binary
+%% Convert a binary to and Hex string or binary
 %% @end
+-spec to_hex(Bin :: binary(), Output :: string | binary) -> string() | binary().
+to_hex(Bin, string) ->
+  lists:flatten([io_lib:format("~2.16.0B", [X]) ||
+    X <- binary_to_list(Bin)]);
+to_hex(Bin, binary) ->
+  bucs:to_binary(to_hex(Bin, string)).
+
+%% @deprecated use bucbinary:from_hex/1
 -spec from_hexstr(String :: list()) -> binary().
 from_hexstr(S) when is_list(S) ->
   hexstr_to_bin(S, []).
+
+%% @doc
+%% Convert aa Hex string or binary to binary
+%% @end
+-spec from_hex(S :: string() | binary()) -> binary().
+from_hex(S) when is_list(S) ->
+  hexstr_to_bin(S, []);
+from_hex(S) when is_binary(S) ->
+  from_hex(bucs:to_list(S)).
+
 hexstr_to_bin([], Acc) ->
   list_to_binary(lists:reverse(Acc));
 hexstr_to_bin([X, Y|T], Acc) ->

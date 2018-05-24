@@ -11,13 +11,14 @@
 
 <table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#are_floats-1">are_floats/1</a></td><td>
 Return true if all binaries in the given list can be converted to float ; false otherwise.</td></tr><tr><td valign="top"><a href="#are_integers-1">are_integers/1</a></td><td>
-Return true if all binaries in the given list can be converted to integer ; false otherwise.</td></tr><tr><td valign="top"><a href="#from_hexstr-1">from_hexstr/1</a></td><td>
-Convert a Hex string to binary.</td></tr><tr><td valign="top"><a href="#is_float-1">is_float/1</a></td><td>
+Return true if all binaries in the given list can be converted to integer ; false otherwise.</td></tr><tr><td valign="top"><a href="#from_hex-1">from_hex/1</a></td><td>
+Convert aa Hex string or binary to binary.</td></tr><tr><td valign="top"><a href="#from_hexstr-1">from_hexstr/1</a></td><td>(<em>Deprecated</em>.) </td></tr><tr><td valign="top"><a href="#is_float-1">is_float/1</a></td><td>
 Return true if the given binary can be converted to float ; false otherwise.</td></tr><tr><td valign="top"><a href="#is_integer-1">is_integer/1</a></td><td>
 Return true if the given binary can be converted to integer ; false otherwise.</td></tr><tr><td valign="top"><a href="#join-2">join/2</a></td><td>
 join a list of binaries with the given separator.</td></tr><tr><td valign="top"><a href="#rand_bits-1">rand_bits/1</a></td><td>
-Generate random binary.</td></tr><tr><td valign="top"><a href="#to_hexstr-1">to_hexstr/1</a></td><td>
-Convert a binary to and Hex string.</td></tr><tr><td valign="top"><a href="#trim-2">trim/2</a></td><td>
+Generate random binary.</td></tr><tr><td valign="top"><a href="#to_hex-1">to_hex/1</a></td><td>
+Convert a binary to and Hex string.</td></tr><tr><td valign="top"><a href="#to_hex-2">to_hex/2</a></td><td>
+Convert a binary to and Hex string or binary.</td></tr><tr><td valign="top"><a href="#to_hexstr-1">to_hexstr/1</a></td><td>(<em>Deprecated</em>.) </td></tr><tr><td valign="top"><a href="#trim-2">trim/2</a></td><td>
 Trim a binary.</td></tr></table>
 
 
@@ -47,6 +48,17 @@ are_integers(Binaries::[binary()]) -&gt; true | false
 
 Return true if all binaries in the given list can be converted to integer ; false otherwise
 
+<a name="from_hex-1"></a>
+
+### from_hex/1 ###
+
+<pre><code>
+from_hex(S::string() | binary()) -&gt; binary()
+</code></pre>
+<br />
+
+Convert aa Hex string or binary to binary
+
 <a name="from_hexstr-1"></a>
 
 ### from_hexstr/1 ###
@@ -56,7 +68,7 @@ from_hexstr(String::list()) -&gt; binary()
 </code></pre>
 <br />
 
-Convert a Hex string to binary
+__This function is deprecated:__ use bucbinary:from_hex/1
 
 <a name="is_float-1"></a>
 
@@ -109,6 +121,28 @@ rand_bits(Bits::non_neg_integer()) -&gt; binary()
 
 Generate random binary
 
+<a name="to_hex-1"></a>
+
+### to_hex/1 ###
+
+<pre><code>
+to_hex(Bin::binary()) -&gt; string()
+</code></pre>
+<br />
+
+Convert a binary to and Hex string
+
+<a name="to_hex-2"></a>
+
+### to_hex/2 ###
+
+<pre><code>
+to_hex(Bin::binary(), Output::string | binary) -&gt; string() | binary()
+</code></pre>
+<br />
+
+Convert a binary to and Hex string or binary
+
 <a name="to_hexstr-1"></a>
 
 ### to_hexstr/1 ###
@@ -118,7 +152,7 @@ to_hexstr(Bin::binary()) -&gt; list()
 </code></pre>
 <br />
 
-Convert a binary to and Hex string
+__This function is deprecated:__ use bucbinary:to_hex/1
 
 <a name="trim-2"></a>
 

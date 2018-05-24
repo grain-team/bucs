@@ -66,7 +66,7 @@ t_floats() ->
 
 t_hexstr() ->
   Bin = <<15, 83, 41, 62, 16, 164, 99, 65, 255, 153, 113, 195, 226, 161, 1, 111>>,
-  ?assertEqual(Bin, bucbinary:from_hexstr(bucbinary:to_hexstr(Bin))).
+  ?assertEqual(Bin, bucbinary:from_hex(bucbinary:to_hex(Bin))).
 
 t_rand_bits() ->
   ?assertEqual(16, size(bucbinary:rand_bits(16 * 8))),

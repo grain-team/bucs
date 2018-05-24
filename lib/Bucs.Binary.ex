@@ -9,8 +9,17 @@ defmodule Bucs.Binary do
   def unquote(:"to_hexstr")(arg1) do
     :erlang.apply(:"bucbinary", :"to_hexstr", [arg1])
   end
+  def unquote(:"to_hex")(arg1) do
+    :erlang.apply(:"bucbinary", :"to_hex", [arg1])
+  end
+  def unquote(:"to_hex")(arg1, arg2) do
+    :erlang.apply(:"bucbinary", :"to_hex", [arg1, arg2])
+  end
   def unquote(:"from_hexstr")(arg1) do
     :erlang.apply(:"bucbinary", :"from_hexstr", [arg1])
+  end
+  def unquote(:"from_hex")(arg1) do
+    :erlang.apply(:"bucbinary", :"from_hex", [arg1])
   end
   def unquote(:"join")(arg1, arg2) do
     :erlang.apply(:"bucbinary", :"join", [arg1, arg2])
