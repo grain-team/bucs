@@ -1,6 +1,6 @@
 -module(bucmime).
 
--export([type/1, exploded/1]).
+-export([type/1, exploded/1, mime/1]).
 
 % @doc return the <tt>File</tt> mimetype.
 -spec type(File :: file:filename_all()) -> binary().
@@ -18,6 +18,10 @@ exploded(File) ->
     _ -> {<<"application">>, <<"octet-stream">>}
   end.
 
+% @doc return the mimetype for a file <tt>Extension</tt>
+-spec mime(Extension :: binary() | string()) -> binary().
+mime(Extension) when is_list(Extension) ->
+  mime(bucs:to_binary(Extension));
 mime(<<".ez">>) -> <<"application/andrew-inset">>;
 mime(<<".anx">>) -> <<"application/annodex">>;
 mime(<<".atom">>) -> <<"application/atom+xml">>;
@@ -569,4 +573,6 @@ mime(<<".mkv">>) -> <<"video/x-matroska">>;
 mime(<<".ice">>) -> <<"x-conference/x-cooltalk">>;
 mime(<<".sisx">>) -> <<"x-epoc/x-sisx-app">>;
 mime(<<".vrm">>) -> <<"x-world/x-vrml">>;
+mime(<<C:1/binary, _/binary>> = Ext) when C =/= <<".">> ->
+  mime(<<".", Ext/binary>>);
 mime(_) -> <<"application/octet-stream">>.
