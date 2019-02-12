@@ -9,8 +9,12 @@
          loopback/0,
          is_ip/1,
          country/1,
-         country/2
+         country/2,
+         country/3
         ]).
+
+-type provider() :: ipinfo | ipstack | ipapi.
+-type country_options() :: [{string() | binary() | atom(), term()}].
 
 % @doc
 % Return a <tt>inet:ip4_address()</tt> from a string or a binary.
@@ -112,14 +116,14 @@ is_ip(IP) ->
   {ok, CountryCode :: binary(), CountryName :: binary(), TimeZone :: binary()}
   | {error, term()}.
 country(IP) ->
-  country([freegeoip, ipapi, geoip, ipinfo], IP, {error, no_provider}).
+  country([ipapi, ipinfo, ipstack], IP, {error, no_provider}, []).
 
-country([], _, Result) ->
+country([], _, Result, _Options) ->
   Result;
-country(_, _, Result) when element(1, Result) == ok ->
+country(_, _, Result, _Options) when element(1, Result) == ok ->
   Result;
-country([Provider|Rest], IP, _) ->
-  country(Rest, IP, country(Provider, IP)).
+country([Provider|Rest], IP, _, Options) ->
+  country(Rest, IP, country(Provider, IP, Options), Options).
 
 country_capture(Body, [Part|Rest]) ->
   case re:run(Body, <<"\"", Part/binary, "\": *{([^}]*)}">>, [{capture, [1], binary}]) of
@@ -139,29 +143,46 @@ country_capture(Body, Name) ->
     _ -> undefined
   end.
 
-% @hidden
-country(freegeoip, IP) ->
-  country("http://freegeoip.net/json/" ++ ip_to_string(IP),
-          <<"country_code">>,
-          <<"country_name">>,
-          <<"time_zone">>);
-country(ipapi, IP) ->
-  country("http://ip-api.com/json/" ++ ip_to_string(IP),
-          <<"countryCode">>,
-          <<"country">>,
-          <<"timezone">>);
-country(ipinfo, IP) ->
-  country("http://ipinfo.io/" ++ ip_to_string(IP) ++ "/json",
-          <<"country">>,
-          <<"xxx">>,
-          <<"xxx">>);
-country(geoip, IP) ->
-  country("http://geoip.nekudo.com/api/" ++ ip_to_string(IP),
-          [<<"country">>, <<"code">>],
-          [<<"country">>, <<"name">>],
-          [<<"location">>, <<"time_zone">>]).
+% @doc
+% Return the country informations for the given provider or with the given options
+%
+% To use ipstack, you need to pass your <code>access_key</code> (see https://ipstack.com/product) in the Options.
+% @end
+-spec country(provider() | inet:ip4_address() | string() | binary(), inet:ip4_address() | string() | binary() | country_options()) ->
+  {ok, CountryCode :: binary(), CountryName :: binary(), TimeZone :: binary()}
+  | {error, term()}.
+country(ipapi, IP) -> country(ipapi, IP, []);
+country(ipinfo, IP) -> country(ipinfo, IP, []);
+country(ipstack, IP) -> country(ipstack, IP, []);
+country(IP, Options) -> country([ipapi, ipinfo, ipstack], IP, {error, no_provider}, Options).
 
-country(URL, CountryCode, CountryName, Timezone) ->
+% @hidden
+country(ipapi, IP, _Options) ->
+  find_country("http://ip-api.com/json/" ++ ip_to_string(IP),
+               <<"countryCode">>,
+               <<"country">>,
+               <<"timezone">>);
+country(ipinfo, IP, _Options) ->
+  find_country("http://ipinfo.io/" ++ ip_to_string(IP) ++ "/json",
+               <<"country">>,
+               <<"xxx">>,
+               <<"xxx">>);
+country(ipstack, IP, Options) ->
+  find_country(io_lib:format("http://api.ipstack.com/~s~s", [ip_to_string(IP), country_options([{format, 1}|Options])]),
+               <<"country_code">>,
+               <<"country_name">>,
+               <<"xxx">>).
+
+country_options(Options) ->
+  Opts = lists:foldl(fun({Key, Value}, Acc) ->
+                  [io_lib:format("~s=~s", [bucs:to_string(Key), bucs:to_string(Value)])|Acc]
+              end, [], Options),
+  case length(Opts) of
+    0 -> "";
+    _ -> "?" ++ string:join(Opts, "&")
+  end.
+
+find_country(URL, CountryCode, CountryName, Timezone) ->
   case httpc:request(URL) of
     {ok, {{_, 200, _}, _, Body}} ->
       case {ok,
@@ -187,7 +208,7 @@ get_iflist() ->
   IfList.
 
 filter_networkcard(<<"vboxnet", _R/binary>>) ->
- false;
+  false;
 filter_networkcard(<<"vnic", _R/binary>>) ->
   false;
 filter_networkcard(<<"vmnet", _R/binary>>) ->
@@ -210,4 +231,3 @@ get_ips([If|Rest], R) ->
 
 get_loopback(If_list) ->
   get_ips([A || A <- If_list, inet:ifget(A, [addr]) == {ok, [{addr, {127, 0, 0, 1}}]}]).
-

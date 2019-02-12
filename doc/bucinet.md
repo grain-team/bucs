@@ -1,8 +1,33 @@
 
 
 # Module bucinet #
+* [Data Types](#types)
 * [Function Index](#index)
 * [Function Details](#functions)
+
+<a name="types"></a>
+
+## Data Types ##
+
+
+
+
+### <a name="type-country_options">country_options()</a> ###
+
+
+<pre><code>
+country_options() = [{string() | binary() | atom(), term()}]
+</code></pre>
+
+
+
+
+### <a name="type-provider">provider()</a> ###
+
+
+<pre><code>
+provider() = ipinfo | ipstack | ipapi
+</code></pre>
 
 <a name="index"></a>
 
@@ -12,7 +37,8 @@
 <table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#active_ip-0">active_ip/0</a></td><td>
 Return the first active IP (or loopback if none).</td></tr><tr><td valign="top"><a href="#active_ips-0">active_ips/0</a></td><td>
 Return all actives IPs.</td></tr><tr><td valign="top"><a href="#country-1">country/1</a></td><td>
-Return the country informations for a given IP address.</td></tr><tr><td valign="top"><a href="#ip_to_binary-1">ip_to_binary/1</a></td><td>
+Return the country informations for a given IP address.</td></tr><tr><td valign="top"><a href="#country-2">country/2</a></td><td> 
+Return the country informations for the given provider or with the given options.</td></tr><tr><td valign="top"><a href="#ip_to_binary-1">ip_to_binary/1</a></td><td>
 Return a binary for a given <tt>inet:ip4_address()</tt></td></tr><tr><td valign="top"><a href="#ip_to_string-1">ip_to_string/1</a></td><td>
 Return a string for the given <tt>inet:ip4_address()</tt></td></tr><tr><td valign="top"><a href="#is_ip-1">is_ip/1</a></td><td>
 Return true if the given parameter is an IP.</td></tr><tr><td valign="top"><a href="#loopback-0">loopback/0</a></td><td>
@@ -56,6 +82,20 @@ country(IP::<a href="inet.md#type-ip4_address">inet:ip4_address()</a> | string()
 <br />
 
 Return the country informations for a given IP address.
+
+<a name="country-2"></a>
+
+### country/2 ###
+
+<pre><code>
+country(IP::<a href="#type-provider">provider()</a> | <a href="inet.md#type-ip4_address">inet:ip4_address()</a> | string() | binary(), Options::<a href="inet.md#type-ip4_address">inet:ip4_address()</a> | string() | binary() | <a href="#type-country_options">country_options()</a>) -&gt; {ok, CountryCode::binary(), CountryName::binary(), TimeZone::binary()} | {error, term()}
+</code></pre>
+<br />
+
+
+Return the country informations for the given provider or with the given options
+
+To use ipstack, you need to pass your `access_key` (see https://ipstack.com/product) in the Options.
 
 <a name="ip_to_binary-1"></a>
 

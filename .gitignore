@@ -19,4 +19,4 @@ xrefr
 c_src/env.mk
 test/eunit/
 _build/
-
+.rebar3/

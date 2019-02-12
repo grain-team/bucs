@@ -6,7 +6,6 @@
 	, {applications, [kernel,stdlib,inets]}
   , {mod, {bucs_app, []}}
 
-  , {maintainers, ["Gregoire Lejeune", "Mathias Franck"]}
   , {licenses, ["BSD-3"]}
   , {links, [{"Github", "https://github.com/G-Corp/bucs"}]}
   , {files, ["src/*"
