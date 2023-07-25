@@ -20,6 +20,7 @@ defmodule Bucs.Mixfile do
   def application do
     [
        applications: [:inets],
+       extra_applications: [eunit: :optional],
        env: [],
        mod: {:bucs_app, []}
     ]
